@@ -1,0 +1,4 @@
+The idea is a dynamic gridiron simulator with a realistic football sim, an in depth management, and a dynamic world
+
+>Football sim
+  >Physics
