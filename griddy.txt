@@ -2,3 +2,34 @@ The idea is a dynamic gridiron simulator with a realistic football sim, an in de
 
 >Football sim
   >Physics
+Weather
+Player States
+Injury
+Fatigue
+Field Conditions
+Play Calling
+Adjustments
+Player decisions and mistakes
+Crowd
+score
+
+>In depth management
+Recruit
+Develop[
+Trade
+Scout
+Preparation
+Playbook
+Practice
+Training
+Schedule
+Championship
+Stats
+
+>Dynamic World
+Logical
+Realistic
+Grand
+nationality
+natural progression
+
