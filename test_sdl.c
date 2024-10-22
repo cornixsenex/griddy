@@ -1,24 +1,91 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 
+//void TestDrawField(void) {
+//	//Draw ten thin lines across the thing
+//	SDL_Renderer* renderer = SDL_CreateRenderer(win, -1, 0);
+//	SDL_SetRenderDrawColor(renderer
+
 
 void main(void) {
+	int quit = 0;
+	SDL_Event event;
+	//Initalize SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
-	SDL_Window* win = SDL_CreateWindow("my window", 100, 100, 640, 640, SDL_WINDOW_SHOWN);
-	SDL_Surface* winSurface = SDL_GetWindowSurface(win);
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
+    }
+	//Create a window window object
+	SDL_Window* win = SDL_CreateWindow("my window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 640, SDL_WINDOW_SHOWN);
 
-	SDL_UpdateWindowSurface(win);
+	//This is the surface which is where you render to on the window (using CPU NOT GPU)
+	//SDL_Surface* winSurface = SDL_GetWindowSurface(win);
 
-	SDL_FillRect(winSurface, NULL, SDL_MapRGB(winSurface->format, 255, 90, 120));
+	//This is the renderer which can draw lines and other stuff
+	SDL_Renderer* renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE); 
+ 	if (!renderer) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not create renderer: %s", SDL_GetError());
+        SDL_DestroyWindow(win);
+        SDL_Quit();
+    }
+
+	//Update
+	//SDL_UpdateWindowSurface(win);
 	
-	SDL_UpdateWindowSurface(win);
+	//Draw a rectange
+	//SDL_FillRect(winSurface, NULL, SDL_MapRGB(winSurface->format, 255, 90, 120));
 
-	SDL_Delay(4200);
+	//Update again	
+	//SDL_UpdateWindowSurface(win);
 
+	//Clear the screen (white screen please)
+	SDL_SetRenderDrawColor (renderer, 123, 231, 77, 255);
+	SDL_RenderClear(renderer);
+
+	//Set color to black for the line drawing
+	//Draw the line
+	SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);
+	SDL_RenderDrawLine(renderer, 10, 0, 10, 420); 
+	SDL_RenderDrawLine(renderer, 20, 0, 20, 420); 
+	SDL_RenderDrawLine(renderer, 30, 0, 30, 420); 
+	SDL_RenderDrawLine(renderer, 40, 0, 40, 420); 
+	SDL_RenderDrawLine(renderer, 50, 0, 50, 420); 
+	SDL_RenderDrawLine(renderer, 60, 0, 60, 420); 
+	SDL_RenderDrawLine(renderer, 70, 0, 70, 420); 
+	SDL_RenderDrawLine(renderer, 80, 0, 80, 420); 
+	SDL_RenderDrawLine(renderer, 90, 0, 90, 420); 
+	SDL_RenderDrawLine(renderer, 100, 0, 100, 420); 
+
+	//Present the render
+	SDL_RenderPresent(renderer);
+
+	//Wait x ms
+//	SDL_Delay(4200);
+
+	while (!quit)
+    {
+        SDL_Delay(10);
+        SDL_PollEvent(&event);
+ 
+        switch (event.type)
+        {
+            case SDL_QUIT:
+                quit = 1;
+                break;
+            // TODO input handling code goes here
+        }
+	}
+
+	//TestDrawField();
+	
+	//Destroy the renderer
+	SDL_DestroyRenderer(renderer);
+
+	//Close part 1
 	SDL_DestroyWindow(win);
 
+	//Close part 2
 	SDL_Quit();
-	
 }
 
 
