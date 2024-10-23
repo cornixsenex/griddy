@@ -5,7 +5,62 @@
 //	//Draw ten thin lines across the thing
 //	SDL_Renderer* renderer = SDL_CreateRenderer(win, -1, 0);
 //	SDL_SetRenderDrawColor(renderer
+//
 
+int DrawFieldLines(SDL_Renderer *renderer, SDL_Rect fieldRect) 
+{
+	int x, y, i, fieldRectx, w, h;
+	//do a for loop start at 0 lines drawn you need to draw x lines to have the field marked correctly
+	
+	//Draw the lines
+	//White lines
+	SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);
+
+	y = fieldRect.y;
+	fieldRectx = fieldRect.x;
+	w = fieldRect.w;
+	h = fieldRect.h; 
+
+	for (i = 0; i < 21; i++) {
+		x = ( fieldRectx + ( (w / 20) * i) );
+		SDL_RenderDrawLine(renderer, x, y, x, y+h);
+	}	
+	
+	//SDL_RenderDrawLine(renderer, 105, 100, 105, 350);
+	
+	return 0;
+}
+
+int RenderGriddy(SDL_Renderer *renderer)
+{
+	//Present the render
+	SDL_RenderPresent(renderer);
+	return 0;
+}
+
+
+int DrawField(SDL_Renderer *renderer, SDL_Rect fieldRect) 
+{	
+	//Draw Black background
+	SDL_SetRenderDrawColor (renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+	//Draw Green Field 	
+	SDL_SetRenderDrawColor (renderer, 80, 180, 100, 255);
+	SDL_RenderFillRect(renderer, &fieldRect);
+
+	//SDL_RenderDrawLine(renderer, 10, 0, 10, 420); 
+	//SDL_RenderDrawLine(renderer, 20, 0, 20, 420); 
+	//SDL_RenderDrawLine(renderer, 30, 0, 30, 420); 
+	//SDL_RenderDrawLine(renderer, 40, 0, 40, 420); 
+	//SDL_RenderDrawLine(renderer, 50, 0, 50, 420); 
+	//SDL_RenderDrawLine(renderer, 60, 0, 60, 420); 
+	//SDL_RenderDrawLine(renderer, 70, 0, 70, 420); 
+	//SDL_RenderDrawLine(renderer, 80, 0, 80, 420); 
+	//SDL_RenderDrawLine(renderer, 90, 0, 90, 420); 
+	//SDL_RenderDrawLine(renderer, 100, 0, 100, 420); 
+
+	return 0;
+}
 
 int main(void) {
 	int quit = 0;
@@ -31,6 +86,15 @@ int main(void) {
 		return 1;
     }
 
+	SDL_Rect fieldRect = {
+		100, //x
+		100, //y
+		500, //w
+		250   //h
+	};
+
+	// SURFACES
+	
 	//Update
 	//SDL_UpdateWindowSurface(win);
 	
@@ -39,27 +103,6 @@ int main(void) {
 
 	//Update again	
 	//SDL_UpdateWindowSurface(win);
-
-	//Clear the screen (white screen please)
-	SDL_SetRenderDrawColor (renderer, 80, 180, 100, 255);
-	SDL_RenderClear(renderer);
-
-	//Set color to black for the line drawing
-	//Draw the line
-	SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);
-	SDL_RenderDrawLine(renderer, 10, 0, 10, 420); 
-	SDL_RenderDrawLine(renderer, 20, 0, 20, 420); 
-	SDL_RenderDrawLine(renderer, 30, 0, 30, 420); 
-	SDL_RenderDrawLine(renderer, 40, 0, 40, 420); 
-	SDL_RenderDrawLine(renderer, 50, 0, 50, 420); 
-	SDL_RenderDrawLine(renderer, 60, 0, 60, 420); 
-	SDL_RenderDrawLine(renderer, 70, 0, 70, 420); 
-	SDL_RenderDrawLine(renderer, 80, 0, 80, 420); 
-	SDL_RenderDrawLine(renderer, 90, 0, 90, 420); 
-	SDL_RenderDrawLine(renderer, 100, 0, 100, 420); 
-
-	//Present the render
-	SDL_RenderPresent(renderer);
 
 	//Wait x ms
 //	SDL_Delay(4200);
@@ -78,27 +121,11 @@ int main(void) {
             // TODO input handling code goes here
         }
 
-		SDL_SetRenderDrawColor (renderer, 80, 180, 100, 255);
-		SDL_RenderClear(renderer);
-
-		SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);
-		SDL_RenderDrawLine(renderer, 10, 0, 10, 420); 
-		SDL_RenderDrawLine(renderer, 20, 0, 20, 420); 
-		SDL_RenderDrawLine(renderer, 30, 0, 30, 420); 
-		SDL_RenderDrawLine(renderer, 40, 0, 40, 420); 
-		SDL_RenderDrawLine(renderer, 50, 0, 50, 420); 
-		SDL_RenderDrawLine(renderer, 60, 0, 60, 420); 
-		SDL_RenderDrawLine(renderer, 70, 0, 70, 420); 
-		SDL_RenderDrawLine(renderer, 80, 0, 80, 420); 
-		SDL_RenderDrawLine(renderer, 90, 0, 90, 420); 
-		SDL_RenderDrawLine(renderer, 100, 0, 100, 420); 
-
-		SDL_RenderPresent(renderer);
+		DrawField(renderer, fieldRect);
+		DrawFieldLines(renderer, fieldRect);
+		RenderGriddy(renderer);
 	}
 
-	//TestDrawField();
-	printf("EXIT 0");
-	
 	//Destroy the renderer
 	SDL_DestroyRenderer(renderer);
 
@@ -107,6 +134,7 @@ int main(void) {
 
 	//Close part 2
 	SDL_Quit();
+	printf("EXIT 0");
 
 	return 0;
 }
