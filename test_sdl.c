@@ -87,8 +87,8 @@ int main(void) {
     }
 
 	SDL_Rect fieldRect = {
-		100, //x
-		100, //y
+		50, //x
+		50, //y
 		500, //w
 		250   //h
 	};
