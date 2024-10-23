@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 
+
 //void TestDrawField(void) {
 //	//Draw ten thin lines across the thing
 //	SDL_Renderer* renderer = SDL_CreateRenderer(win, -1, 0);
@@ -126,6 +127,14 @@ int main(void) {
                 quit = 1;
                 break;
             // TODO input handling code goes here
+
+			case SDL_KEYDOWN:
+				switch (event.key.keysym.sym) {
+					case SDLK_q:
+					case SDLK_ESCAPE:
+						quit = 1;
+						break;
+				}
         }
 
 		DrawField(renderer, fieldRect);
