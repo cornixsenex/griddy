@@ -7,59 +7,66 @@
 //	SDL_SetRenderDrawColor(renderer
 //
 
-int DrawFieldLines(SDL_Renderer *renderer, SDL_Rect fieldRect) 
+void DrawFieldLines(SDL_Renderer *renderer, SDL_Rect fieldRect) 
 {
 	int x, y, i, fieldRectx, w, h;
 	//do a for loop start at 0 lines drawn you need to draw x lines to have the field marked correctly
 	
-	//Draw the lines
-	//White lines
+	//set White lines
 	SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);
 
+	//upper limit is y value of the fieldRect as defined
 	y = fieldRect.y;
+	//this is just the x value where the top left corner of the field is
 	fieldRectx = fieldRect.x;
+	//this is the total width of the field
 	w = fieldRect.w;
+	//This is the total height (which goes down btw) of the field	
 	h = fieldRect.h; 
 
+	//You need to draw 20 lines across the field
 	for (i = 0; i < 21; i++) {
+		//draw a line from a point x, y where x is the left end of the field plus i/20 of the field which is 1 / 20 or 5 units in a 100 unit wide field and y is the upper limit of the field to x, y where x is the same as above and y is the bottom limit of the field (y + h)
 		x = ( fieldRectx + ( (w / 20) * i) );
 		SDL_RenderDrawLine(renderer, x, y, x, y+h);
 	}	
-	
-	//SDL_RenderDrawLine(renderer, 105, 100, 105, 350);
-	
-	return 0;
 }
 
-int RenderGriddy(SDL_Renderer *renderer)
+void RenderGriddy(SDL_Renderer *renderer)
 {
 	//Present the render
 	SDL_RenderPresent(renderer);
-	return 0;
 }
 
-
-int DrawField(SDL_Renderer *renderer, SDL_Rect fieldRect) 
+void DrawField(SDL_Renderer *renderer, SDL_Rect fieldRect) 
 {	
+	int x, y, w, h;
+	SDL_Rect endZone1_Rect, endZone2_Rect;
+	x = fieldRect.x;
+	y = fieldRect.y;
+	w = fieldRect.w;
+	h = fieldRect.h;
+	endZone1_Rect.x = x - (w/10); 
+	endZone1_Rect.y = y;
+	endZone1_Rect.w = w / 10;
+	endZone1_Rect.h = h;
+
+	endZone2_Rect.x = x + w; 
+	endZone2_Rect.y = y;
+	endZone2_Rect.w = w / 10;
+	endZone2_Rect.h = h;
+
 	//Draw Black background
 	SDL_SetRenderDrawColor (renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 	//Draw Green Field 	
 	SDL_SetRenderDrawColor (renderer, 80, 180, 100, 255);
 	SDL_RenderFillRect(renderer, &fieldRect);
-
-	//SDL_RenderDrawLine(renderer, 10, 0, 10, 420); 
-	//SDL_RenderDrawLine(renderer, 20, 0, 20, 420); 
-	//SDL_RenderDrawLine(renderer, 30, 0, 30, 420); 
-	//SDL_RenderDrawLine(renderer, 40, 0, 40, 420); 
-	//SDL_RenderDrawLine(renderer, 50, 0, 50, 420); 
-	//SDL_RenderDrawLine(renderer, 60, 0, 60, 420); 
-	//SDL_RenderDrawLine(renderer, 70, 0, 70, 420); 
-	//SDL_RenderDrawLine(renderer, 80, 0, 80, 420); 
-	//SDL_RenderDrawLine(renderer, 90, 0, 90, 420); 
-	//SDL_RenderDrawLine(renderer, 100, 0, 100, 420); 
-
-	return 0;
+	//Draw End zones
+	SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);
+	//Left end zone
+	SDL_RenderFillRect(renderer, &endZone1_Rect);
+	SDL_RenderFillRect(renderer, &endZone2_Rect);
 }
 
 int main(void) {
@@ -87,7 +94,7 @@ int main(void) {
     }
 
 	SDL_Rect fieldRect = {
-		50, //x
+		75, //x
 		50, //y
 		500, //w
 		250   //h
