@@ -7,13 +7,14 @@
 //	SDL_SetRenderDrawColor(renderer
 
 
-void main(void) {
+int main(void) {
 	int quit = 0;
 	SDL_Event event;
 	//Initalize SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
+		return 1;
     }
 	//Create a window window object
 	SDL_Window* win = SDL_CreateWindow("my window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 640, SDL_WINDOW_SHOWN);
@@ -27,6 +28,7 @@ void main(void) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not create renderer: %s", SDL_GetError());
         SDL_DestroyWindow(win);
         SDL_Quit();
+		return 1;
     }
 
 	//Update
@@ -39,7 +41,7 @@ void main(void) {
 	//SDL_UpdateWindowSurface(win);
 
 	//Clear the screen (white screen please)
-	SDL_SetRenderDrawColor (renderer, 123, 231, 77, 255);
+	SDL_SetRenderDrawColor (renderer, 80, 180, 100, 255);
 	SDL_RenderClear(renderer);
 
 	//Set color to black for the line drawing
@@ -62,6 +64,7 @@ void main(void) {
 	//Wait x ms
 //	SDL_Delay(4200);
 
+	//main loop
 	while (!quit)
     {
         SDL_Delay(10);
@@ -74,9 +77,27 @@ void main(void) {
                 break;
             // TODO input handling code goes here
         }
+
+		SDL_SetRenderDrawColor (renderer, 80, 180, 100, 255);
+		SDL_RenderClear(renderer);
+
+		SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);
+		SDL_RenderDrawLine(renderer, 10, 0, 10, 420); 
+		SDL_RenderDrawLine(renderer, 20, 0, 20, 420); 
+		SDL_RenderDrawLine(renderer, 30, 0, 30, 420); 
+		SDL_RenderDrawLine(renderer, 40, 0, 40, 420); 
+		SDL_RenderDrawLine(renderer, 50, 0, 50, 420); 
+		SDL_RenderDrawLine(renderer, 60, 0, 60, 420); 
+		SDL_RenderDrawLine(renderer, 70, 0, 70, 420); 
+		SDL_RenderDrawLine(renderer, 80, 0, 80, 420); 
+		SDL_RenderDrawLine(renderer, 90, 0, 90, 420); 
+		SDL_RenderDrawLine(renderer, 100, 0, 100, 420); 
+
+		SDL_RenderPresent(renderer);
 	}
 
 	//TestDrawField();
+	printf("EXIT 0");
 	
 	//Destroy the renderer
 	SDL_DestroyRenderer(renderer);
@@ -86,6 +107,8 @@ void main(void) {
 
 	//Close part 2
 	SDL_Quit();
+
+	return 0;
 }
 
 
