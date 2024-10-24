@@ -1,16 +1,26 @@
 CC = gcc
-CFLAGS = -Wall -Werror 
+CFLAGS = -Wall -Werror -Iinclude
 SDL_CFLAGS = $(shell sdl2-config --cflags)
 SDL_LDFLAGS = $(shell sdl2-config --libs)
+SRC_DIR = src
+INCLUDE_DIR = include
 
-TARGET = griddy_sdl
-SOURCE = test_sdl.c
+SRC = $(wildcard $(SRC_DIR)/*.c)
+OBJ = $(SRC:.c=.o)
 
-$(TARGET): $(SOURCE)
-	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ $< $(SDL_LDFLAGS)
+EXEC = griddy_sdl
+
+all: $(EXEC)
+	rm -f $(OBJ)
+
+%.o: %.c
+	$(CC) $(CFLAGS) $(SDL_CFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
+
+$(EXEC): $(OBJ)
+	$(CC) $(CFLAGS) $(SDL_LDFLAGS) $^ -o $@
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(OBJ) $(EXEC)
 
-run: $(TARGET)
-	./$(TARGET)
+run: $(EXEC)
+	./$(EXEC)
