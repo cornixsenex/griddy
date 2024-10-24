@@ -35,7 +35,7 @@ GriddySDLData griddySDLData;
 void DrawFieldLines(SDL_Renderer *renderer) 
 {
 	int i = 0; 
-	int nx = 0;
+	//int nx = 0;
 	//do a for loop start at 0 lines drawn you need to draw x lines to have the field marked correctly
 	
 	//set White lines
@@ -43,7 +43,7 @@ void DrawFieldLines(SDL_Renderer *renderer)
 	//First draw a white box around the field
 	SDL_RenderDrawLine(renderer, griddySDLData.fieldRect.x, griddySDLData.fieldRect.y, griddySDLData.fieldRect.x + griddySDLData.fieldRect.w, griddySDLData.fieldRect.y);
 	SDL_RenderDrawLine(renderer, griddySDLData.fieldRect.x + griddySDLData.fieldRect.w, griddySDLData.fieldRect.y, griddySDLData.fieldRect.x + griddySDLData.fieldRect.w, griddySDLData.fieldRect.y + griddySDLData.fieldRect.h);
-	SDL_RenderDrawLine(renderer, griddySDLData.fieldRect.x, griddySDLData.fieldRect.y, griddySDLData.fieldRect.x, griddySDLData.fieldRect.y + griddySDLData.fieldRect.h);
+	//SDL_RenderDrawLine(renderer, griddySDLData.fieldRect.x, griddySDLData.fieldRect.y, griddySDLData.fieldRect.x, griddySDLData.fieldRect.y + griddySDLData.fieldRect.h);
 
 	SDL_RenderDrawLine(renderer, griddySDLData.fieldRect.x, griddySDLData.fieldRect.y + griddySDLData.fieldRect.h,  griddySDLData.fieldRect.x + griddySDLData.fieldRect.w, griddySDLData.fieldRect.y + griddySDLData.fieldRect.h);
 
@@ -57,8 +57,7 @@ void DrawFieldLines(SDL_Renderer *renderer)
 //	h = griddySDLData.fieldRect.h; 
 //
 
-	nx = griddySDLData.fieldRect.x + ((griddySDLData.fieldRect.w / 20) * 20);
-	printf ("%d   -   %d\n", nx, griddySDLData.fieldRect.x + griddySDLData.fieldRect.w);
+	//nx = griddySDLData.fieldRect.x + ((griddySDLData.fieldRect.w / 20) * 20);
 	//You need to draw 20 lines across the field
 	for (i = 0; i < 21; i++) {
 		//draw a line from a point x, y where x is the left end of the field plus i/20 of the field which is 1 / 20 or 5 units in a 100 unit wide field and y is the upper limit of the field to x, y where x is the same as above and y is the bottom limit of the field (y + h)
@@ -210,8 +209,11 @@ void HandleResizeField()
 	griddySDLData.fieldRect.x = griddySDLData.screenSizeRect.w / 10;
 	griddySDLData.fieldRect.y = griddySDLData.screenSizeRect.h / 10;
 	griddySDLData.fieldRect.w = (griddySDLData.screenSizeRect.w / 10) * 8;
+	//Make sure the field size is a multiple of 20 so that the grid lines are drawn correctly
+	while (griddySDLData.fieldRect.w % 20 != 0) {
+		griddySDLData.fieldRect.w -= 1;
+	}
 	griddySDLData.fieldRect.h = griddySDLData.fieldRect.w * 16 / 30;
-//	griddySDLData.fieldRect.h = (griddySDLData.screenSizeRect.h / 10) * 9;
 }
 
 void HandleResizeScreen() {
