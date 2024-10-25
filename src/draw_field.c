@@ -35,13 +35,15 @@ void DrawGriddyField(SDL_Renderer *renderer)
 
 	CalcFieldLayout(&layoutWidth, &layoutHeight, &layoutX, &layoutY, &layoutRect);
 
-
-	//Draw Black background
+	//Draw Black background - Clear the entire window and make it black
 	SDL_SetRenderDrawColor (renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
-	//Draw Green Field 	
-	SDL_SetRenderDrawColor (renderer, 80, 180, 100, 255);
+	//Draw Hot Pink total layout (which should all get covered up, right?)
+	SDL_SetRenderDrawColor (renderer, 255, 0, 255, 255);
 	SDL_RenderFillRect(renderer, &layoutRect);
+	//Draw Green Field of Play
+	DrawGriddyFieldOfPlay(renderer, &layoutRect);
+
 	//Draw End zones
 	//SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);
 	////Left end zone
@@ -53,6 +55,26 @@ void DrawGriddyField(SDL_Renderer *renderer)
 	//Draw Hash Marks
 	//Draw Goalines
 	//DrawGriddyFieldLines(renderer);
+}
+
+void DrawGriddyFieldOfPlay (SDL_Renderer *renderer, SDL_Rect* layoutRect)
+{
+	SDL_Rect fieldOfPlay_Rect;
+	 
+	//The length of the playing field (width of the FieldOfPlay_Rect) which is equal to layoutRect.w * .field_length   / .total_layout_length
+	fieldOfPlay_Rect.w = layoutRect->w * FieldDimension_Griddy_Default.field_length / FieldDimension_Griddy_Default.base.total_layout_length;
+	//The width of the playing field (height of the FieldOfPlay_Rect) which is equal to  layoutRect.h * .field_width / .total_layout_width 
+	fieldOfPlay_Rect.h = layoutRect->h * FieldDimension_Griddy_Default.field_width / FieldDimension_Griddy_Default.base.total_layout_width;
+
+	//Calculate the XY of the fieldOfPlay_Rect - Find the total difference between layout and fieldOfPlay then divide that in half to get the top left coordinates
+	fieldOfPlay_Rect.x = layoutRect->x + ( (layoutRect->w - fieldOfPlay_Rect.w) / 2);
+	fieldOfPlay_Rect.y = layoutRect->y + ( (layoutRect->h - fieldOfPlay_Rect.h) / 2);
+
+	//The field should be green so that's the color we're going to draw
+	SDL_SetRenderDrawColor (renderer, 80, 180, 100, 255);
+
+	//Render the field of play	
+	SDL_RenderFillRect(renderer, &fieldOfPlay_Rect);
 }
 
 void DrawGriddyFieldLines(SDL_Renderer *renderer) 
@@ -165,7 +187,7 @@ void CalcFieldLayout(int* layoutWidth, int* layoutHeight, int* layoutX, int* lay
 	//A griddy layout is proportional - the proportions are stored inside FieldDimension_Griddy_Default
 	*layoutHeight = *layoutWidth * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
 	if (*layoutHeight > griddySDL_Data.screenSizeRect.h - (griddySDL_Data.screenSizeRect.h / 5)) {
-		printf("Field is cut off plz fix and use y as limiting factor");
+		//printf("Field is cut off plz fix and use y as limiting factor");
 		*layoutHeight = griddySDL_Data.screenSizeRect.h - (griddySDL_Data.screenSizeRect.h / 5);
 		*layoutWidth = *layoutHeight * FieldDimension_Griddy_Default.base.total_layout_length / FieldDimension_Griddy_Default.base.total_layout_width;
 	}

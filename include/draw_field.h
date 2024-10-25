@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 
 void DrawGriddyField(SDL_Renderer *renderer);
+void DrawGriddyFieldOfPlay (SDL_Renderer *renderer, SDL_Rect* layoutRect);
 void RenderGriddy (SDL_Renderer *renderer);
 void DrawGriddyFieldGoals(SDL_Renderer *renderer);
 void HandleResizeScreen();
