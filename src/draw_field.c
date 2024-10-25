@@ -156,13 +156,18 @@ void HandleResizeScreen() {
 void CalcFieldLayout(int* layoutWidth, int* layoutHeight, int* layoutX, int* layoutY, SDL_Rect* layoutRect)
 {
 	//First use the width and then check if the height is too much, in that case use the height instead, but then also double check if the length is too much then print an error I guess (because it tried to limit on x and y and fialed both idk how that's possible basically so yeah
+	//
+	//First determine which is the limiting factor then use it as the basis for the field size
+	//Basically given the window dimensions what is the largest valid layout you can draw (390x250 and a ten percent margin)
 
 	//	A 10% margin on both sides is a 1/5 margin all together so the total layout is 4/5 of the screen width
 	*layoutWidth = griddySDL_Data.screenSizeRect.w - (griddySDL_Data.screenSizeRect.w / 5);
 	//A griddy layout is proportional - the proportions are stored inside FieldDimension_Griddy_Default
 	*layoutHeight = *layoutWidth * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
-	if (*layoutHeight > griddySDL_Data.screenSizeRect.h) {
+	if (*layoutHeight > griddySDL_Data.screenSizeRect.h - (griddySDL_Data.screenSizeRect.h / 5)) {
 		printf("Field is cut off plz fix and use y as limiting factor");
+		*layoutHeight = griddySDL_Data.screenSizeRect.h - (griddySDL_Data.screenSizeRect.h / 5);
+		*layoutWidth = *layoutHeight * FieldDimension_Griddy_Default.base.total_layout_length / FieldDimension_Griddy_Default.base.total_layout_width;
 	}
 
 	//SET MARGINS
