@@ -7,6 +7,7 @@ void HandleResizeScreen();
 void HandleResizeField();
 int DrawScreen(SDL_Renderer *renderer); 
 void DrawGriddyFieldLines(SDL_Renderer *renderer);
+void CalcFieldLayout(int* layoutWidth, int* layoutHeight, int* layoutX, int* layoutY, SDL_Rect* layoutRect);
 
 typedef enum {
 	FIELD_TYPE_GRIDDY,

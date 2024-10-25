@@ -31,33 +31,10 @@ void DrawGriddyField(SDL_Renderer *renderer)
 	int layoutHeight;    //the h of the toal layout (perimeter + bench area + sideline + field + sideline + bench area + perimeter) which should be kept at a margine from the edge of the window
 	int layoutX;         //the X on the window where the layout starts
 	int layoutY;	     //the Y on the window where the layout starts
-
 	SDL_Rect layoutRect;
 
-	//First use the width and then check if the height is too much, in that case use the height instead, but then also double check if the length is too much then print an error I guess (because it tried to limit on x and y and fialed both idk how that's possible basically so yeah
+	CalcFieldLayout(&layoutWidth, &layoutHeight, &layoutX, &layoutY, &layoutRect);
 
-	//	A 10% margin on both sides is a 1/5 margin all together so the total layout is 4/5 of the screen width
-	layoutWidth = griddySDL_Data.screenSizeRect.w - (griddySDL_Data.screenSizeRect.w / 5);
-	//A griddy layout is proportional - the proportions are stored inside FieldDimension_Griddy_Default
-	layoutHeight = layoutWidth * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
-	if (layoutHeight > griddySDL_Data.screenSizeRect.h) {
-		printf("Field is cut off plz fix and use y as limiting factor");
-	}
-
-	//SET MARGINS
-	
-	//Start at the left margin which is the total margin / 2 where margin is window size minus layoutWidth
-	layoutX = (griddySDL_Data.screenSizeRect.w - layoutWidth) / 2;
-	layoutY = (griddySDL_Data.screenSizeRect.h - layoutHeight) / 2;
-	
-	//Draw the entire Field Area (IE the relevant portion of the actual window size)
-	//First clear the screen, then draw the total_length and total_width of the field
-	
-	//Assign  layoutRect 
-	layoutRect.x = layoutX;
-	layoutRect.y = layoutY;
-	layoutRect.h = layoutHeight;
-	layoutRect.w = layoutWidth;
 
 	//Draw Black background
 	SDL_SetRenderDrawColor (renderer, 0, 0, 0, 255);
@@ -175,6 +152,36 @@ void HandleResizeScreen() {
 //	HandleResizeField();
 	//printf("Window resized to %dx%d\n", griddySDLData.pollEvent.window.data1, griddySDLData.pollEvent.window.data2);
 }
+
+void CalcFieldLayout(int* layoutWidth, int* layoutHeight, int* layoutX, int* layoutY, SDL_Rect* layoutRect)
+{
+	//First use the width and then check if the height is too much, in that case use the height instead, but then also double check if the length is too much then print an error I guess (because it tried to limit on x and y and fialed both idk how that's possible basically so yeah
+
+	//	A 10% margin on both sides is a 1/5 margin all together so the total layout is 4/5 of the screen width
+	*layoutWidth = griddySDL_Data.screenSizeRect.w - (griddySDL_Data.screenSizeRect.w / 5);
+	//A griddy layout is proportional - the proportions are stored inside FieldDimension_Griddy_Default
+	*layoutHeight = *layoutWidth * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
+	if (*layoutHeight > griddySDL_Data.screenSizeRect.h) {
+		printf("Field is cut off plz fix and use y as limiting factor");
+	}
+
+	//SET MARGINS
+	
+	//Start at the left margin which is the total margin / 2 where margin is window size minus layoutWidth
+	*layoutX = (griddySDL_Data.screenSizeRect.w - *layoutWidth) / 2;
+	*layoutY = (griddySDL_Data.screenSizeRect.h - *layoutHeight) / 2;
+	
+	//Draw the entire Field Area (IE the relevant portion of the actual window size)
+	//First clear the screen, then draw the total_length and total_width of the field
+	
+	//Assign  layoutRect 
+	layoutRect->x = *layoutX;
+	layoutRect->y = *layoutY;
+	layoutRect->h = *layoutHeight;
+	layoutRect->w = *layoutWidth;
+}
+
+	
 
 //void HandleResizeField()
 //{
