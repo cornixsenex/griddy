@@ -4,10 +4,9 @@
 
 typedef struct {
 	SDL_Rect screenSizeRect;
-	SDL_Rect fieldRect;
 	SDL_Event pollEvent;
 	SDL_Window* fieldWindow;
 	SDL_Renderer* renderer;
-} GriddySDLData;
+} GriddySDL_Data;
 
-extern GriddySDLData griddySDLData;
+extern GriddySDL_Data griddySDL_Data;

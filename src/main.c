@@ -15,9 +15,9 @@ int main(void) {
 	//CLEANUP
 	
 	//Destroy the renderer
-	SDL_DestroyRenderer(griddySDLData.renderer);
+	SDL_DestroyRenderer(griddySDL_Data.renderer);
 	//Close part 1
-	SDL_DestroyWindow(griddySDLData.fieldWindow);
+	SDL_DestroyWindow(griddySDL_Data.fieldWindow);
 	//Close part 2
 	SDL_Quit();
 	//ALL GOOD
@@ -31,22 +31,22 @@ void main_loop() {
 		//This is a delay so it's not just flooring the CPU
 		SDL_Delay(10);
 		//Get input
-		SDL_PollEvent(&griddySDLData.pollEvent);
+		SDL_PollEvent(&griddySDL_Data.pollEvent);
 	   //Handle input (QUIT, Keypress, Window Event...etc) 
-		switch (griddySDLData.pollEvent.type)
+		switch (griddySDL_Data.pollEvent.type)
 		{
 			case SDL_QUIT:
 				quit = true;
 				break;
 			case SDL_KEYDOWN:
-				switch (griddySDLData.pollEvent.key.keysym.sym) {
+				switch (griddySDL_Data.pollEvent.key.keysym.sym) {
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						quit = true;
 						break;
 				}
 			case SDL_WINDOWEVENT:
-				switch (griddySDLData.pollEvent.window.event) {
+				switch (griddySDL_Data.pollEvent.window.event) {
 					case SDL_WINDOWEVENT_RESIZED:
 						//Right now just prints new window size, should call a re-draw window size thing
 						HandleResizeScreen();
@@ -55,7 +55,7 @@ void main_loop() {
 			}
 		//Draws screen
 		//Should be a switch on like Screen_Type because it won't always just draw field also this should all be a seperate main_loop function
-		DrawScreen(griddySDLData.renderer);
+		DrawScreen(griddySDL_Data.renderer);
 	
 	//Return to top of Loop
 	}

@@ -16,8 +16,8 @@ typedef enum {
 
 typedef struct {
 	FieldType FieldType;
-	int total_length;
-	int total_width;
+	int total_layout_length;
+	int total_layout_width;
 } FieldDimension;
 
 typedef struct {
