@@ -1,14 +1,15 @@
 #include <SDL2/SDL.h>
 
 void DrawGriddyField(SDL_Renderer *renderer);
-void DrawGriddyFieldOfPlay (SDL_Renderer *renderer, SDL_Rect* layoutRect);
+void DrawGriddyFieldOfPlay (SDL_Renderer *renderer, SDL_Rect* Rect_Layout);
+void DrawGriddyYardLines(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay);
 void RenderGriddy (SDL_Renderer *renderer);
 void DrawGriddyFieldGoals(SDL_Renderer *renderer);
 void HandleResizeScreen();
 void HandleResizeField();
 int DrawScreen(SDL_Renderer *renderer); 
-void DrawGriddyFieldLines(SDL_Renderer *renderer);
-void CalcFieldLayout(int* layoutWidth, int* layoutHeight, int* layoutX, int* layoutY, SDL_Rect* layoutRect);
+void CalcFieldLayout(SDL_Rect* Rect_Layout);
+void ScaleGriddyFieldOfPlay (SDL_Rect *Rect_Layout, SDL_Rect* Rect_FieldOfPlay);
 
 typedef enum {
 	FIELD_TYPE_GRIDDY,
