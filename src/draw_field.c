@@ -249,18 +249,3 @@ void DrawGriddyEndzones (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
 
 }
 	
-	
-
-//void HandleResizeField()
-//{
-//
-//	//Always 10 % margin in all directions please. 
-//	griddySDLData.fieldRect.x = griddySDLData.screenSizeRect.w / 10;
-//	griddySDLData.fieldRect.y = griddySDLData.screenSizeRect.h / 10;
-//	griddySDLData.fieldRect.w = (griddySDLData.screenSizeRect.w / 10) * 8;
-//	//Make sure the field size is a multiple of 20 so that the grid lines are drawn correctly
-//	while (griddySDLData.fieldRect.w % 20 != 0) {
-//		griddySDLData.fieldRect.w -= 1;
-//	}
-//	griddySDLData.fieldRect.h = griddySDLData.fieldRect.w * 16 / 30;
-//}
