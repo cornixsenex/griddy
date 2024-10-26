@@ -28,22 +28,23 @@ FieldDimension_Griddy FieldDimension_Griddy_Default = {
 void DrawGriddyField(SDL_Renderer *renderer) 
 {
 	//Initialize the rectanges we will be drawing: layout, field of play, endzones, sidelines, bench area etc	
-	SDL_Rect Rect_Layout;
-
-	//Sets layout to scale with the window size
-	CalcFieldLayout(&Rect_Layout);
+	SDL_Rect Rect_Layout, Rect_FieldOfPlay;
 
 	//Draw Black background - Clear the entire window and make it black
 	SDL_SetRenderDrawColor (renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
+
+	//Sets layout to scale with the window size
+	CalcFieldLayout(&Rect_Layout);
+
 	//Draw Hot Pink total layout (which should all get covered up, right?)
 	SDL_SetRenderDrawColor (renderer, 255, 0, 255, 255);
 	SDL_RenderFillRect(renderer, &Rect_Layout);
 	//Draw Green Field of Play
-	DrawGriddyFieldOfPlay(renderer, &Rect_Layout);
+	DrawGriddyFieldOfPlay(renderer, &Rect_Layout, &Rect_FieldOfPlay);
 
 	//Draw End zones
-	//DrawGriddyEndzones(renderer, &layoutRect);
+	DrawGriddyEndzones(renderer, &Rect_FieldOfPlay);
 	//SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);:
 	////Left end zone
 	//SDL_RenderFillRect(renderer, &endZone1_Rect);
@@ -68,22 +69,20 @@ void ScaleGriddyFieldOfPlay (SDL_Rect *Rect_Layout, SDL_Rect* Rect_FieldOfPlay)
 	Rect_FieldOfPlay->y = Rect_Layout->y + ( (Rect_Layout->h - Rect_FieldOfPlay->h) / 2);
 }
 
-void DrawGriddyFieldOfPlay (SDL_Renderer *renderer, SDL_Rect *Rect_Layout)
+void DrawGriddyFieldOfPlay (SDL_Renderer *renderer, SDL_Rect *Rect_Layout, SDL_Rect* Rect_FieldOfPlay)
 {
 
-	SDL_Rect Rect_FieldOfPlay;
-
-	ScaleGriddyFieldOfPlay(Rect_Layout, &Rect_FieldOfPlay);
+	ScaleGriddyFieldOfPlay(Rect_Layout, Rect_FieldOfPlay);
 
 
 	//The field should be green so that's the color we're going to draw
 	SDL_SetRenderDrawColor (renderer, 80, 180, 100, 255);
 
 	//Render the field of play	
-	SDL_RenderFillRect(renderer, &Rect_FieldOfPlay);
+	SDL_RenderFillRect(renderer, Rect_FieldOfPlay);
 
 	//Draw the yard lines
-	DrawGriddyYardLines(renderer, &Rect_FieldOfPlay);
+	DrawGriddyYardLines(renderer, Rect_FieldOfPlay);
 }
 
 void DrawGriddyYardLines(SDL_Renderer *renderer, SDL_Rect *fieldOfPlay_Rect) 
@@ -213,11 +212,43 @@ void CalcFieldLayout(SDL_Rect* Rect_Layout)
 	//SET MARGINS - Total Margin is the difference between the screensize and the layout size / one side margin is half that	
 	Rect_Layout->x = (griddySDL_Data.screenSizeRect.w - Rect_Layout->w) / 2;
 	Rect_Layout->y = (griddySDL_Data.screenSizeRect.h - Rect_Layout->h) / 2;
-	
-
-
 }
 
+void DrawGriddyEndzones (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
+{
+	SDL_Rect Rect_EndzoneLeft, Rect_EndzoneRight;
+
+	//End zone color - White for now but should be dependant on team
+	SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);
+	
+	//First the left then the right
+	
+	//Left Endzone
+	//The height is the same as the field of play
+	Rect_EndzoneLeft.h = Rect_FieldOfPlay->h;
+	//The length is 10 yards (proportional of course)
+	Rect_EndzoneLeft.w = Rect_FieldOfPlay->w / 10;
+	//the x is the fieldofplay - 10
+	Rect_EndzoneLeft.x = Rect_FieldOfPlay->x - Rect_EndzoneLeft.w;
+	//the y is fieldofplay
+	Rect_EndzoneLeft.y = Rect_FieldOfPlay->y;
+
+	//Right Endzone
+	//The height is the same as the field of play
+	Rect_EndzoneRight.h = Rect_FieldOfPlay->h;
+	//The length is 10 yards (proportional of course)
+	Rect_EndzoneRight.w = Rect_FieldOfPlay->w / 10;
+	//the x is the fieldofplay + 10
+	Rect_EndzoneRight.x = Rect_FieldOfPlay->x + Rect_FieldOfPlay->w;
+	//the y is fieldofplay
+	Rect_EndzoneRight.y = Rect_FieldOfPlay->y;
+
+	//Draw the endzone rectangles
+	SDL_RenderFillRect(renderer, &Rect_EndzoneLeft);
+	SDL_RenderFillRect(renderer, &Rect_EndzoneRight);
+
+}
+	
 	
 
 //void HandleResizeField()
