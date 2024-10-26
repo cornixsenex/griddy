@@ -45,16 +45,14 @@ void DrawGriddyField(SDL_Renderer *renderer)
 
 	//Draw End zones
 	DrawGriddyEndzones(renderer, &Rect_FieldOfPlay);
-	//SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);:
-	////Left end zone
-	//SDL_RenderFillRect(renderer, &endZone1_Rect);
-	////Right end zone
-	//SDL_RenderFillRect(renderer, &endZone2_Rect);
+	
+	//Draw Sidelines
+	DrawGriddySidelines(renderer, &Rect_FieldOfPlay);
+
 	//Draw Goals
-//	DrawFieldGoals(renderer);
 	//Draw Hash Marks
-	//Draw Goalines
-	//DrawGriddyFieldLines(renderer);
+	//Draw Bench Area
+	//Draw Perimeter
 }
 
 void ScaleGriddyFieldOfPlay (SDL_Rect *Rect_Layout, SDL_Rect* Rect_FieldOfPlay)
@@ -248,4 +246,33 @@ void DrawGriddyEndzones (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
 	SDL_RenderFillRect(renderer, &Rect_EndzoneRight);
 
 }
+
+void DrawGriddySidelines (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay) 
+{
+	SDL_Rect Rect_SidelineTop, Rect_SidelineLeft, Rect_SidelineBottom, Rect_SidelineRight;
+
+	//Get dimensions for
+	
+	//SIDELINE TOP
+	//x = Rect_FieldOfPlay.x - endzone width
+	//y = Rect_FieldOfPlay.y - Sideline Width
+	//w = FieldofPlay.w + 2 endzone width
+	//h = sideline width
+	
+
+	//SIDELINE LEFT
+	//x = Rect_FieldOfPlay.x - endzone width - sideline width
+	//y = Rect_FieldOfPlay.y - Sideline Width
+	//w = sideline width
+	//h = 2 sideline width + field width 
+
+	//SIDELINE BOTTOM
+	////w = FieldofPlay.w + 2 endzone width
+	//h = sideline width
+
+
+
+	//SIDELINE RIGHT
+	//w = sideline width
+	//h = 2 sideline width + field width 
 	
