@@ -250,7 +250,7 @@ void DrawGriddyEndzones (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
 void DrawGriddySidelines (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay) 
 {
 	int endzoneWidth, sidelineWidth;
-	SDL_Rect Rect_SidelineTop;//, Rect_SidelineLeft, Rect_SidelineBottom, Rect_SidelineRight;
+	SDL_Rect Rect_SidelineTop, Rect_SidelineLeft, Rect_SidelineBottom, Rect_SidelineRight;
 
 	//Make sure the endzone and sidelines are proprotional to the field
 	endzoneWidth = Rect_FieldOfPlay->w * FieldDimension_Griddy_Default.endzone_length / FieldDimension_Griddy_Default.field_length; 
@@ -259,40 +259,47 @@ void DrawGriddySidelines (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
 	//Get dimensions for
 	
 	//SIDELINE TOP
-	//x = Rect_FieldOfPlay.x - endzone width 
 	Rect_SidelineTop.x = Rect_FieldOfPlay->x - endzoneWidth;
-	//y = Rect_FieldOfPlay.y - Sideline Width
 	Rect_SidelineTop.y = Rect_FieldOfPlay->y - sidelineWidth;
-	//w = FieldofPlay.w + 2 endzone width
 	Rect_SidelineTop.w = Rect_FieldOfPlay->w + (2 * endzoneWidth);
-	//h = sideline width
 	Rect_SidelineTop.h = sidelineWidth;
 
 	//SIDELINE LEFT
 	//x = Rect_FieldOfPlay.x - endzone width - sideline width
+	Rect_SidelineLeft.x = Rect_FieldOfPlay->x - endzoneWidth - sidelineWidth;
 	//y = Rect_FieldOfPlay.y - Sideline Width
+	Rect_SidelineLeft.y = Rect_FieldOfPlay->y - sidelineWidth;
 	//w = sideline width
+	Rect_SidelineLeft.w = sidelineWidth;
 	//h = 2 sideline width + field width 
+	Rect_SidelineLeft.h = (2 * sidelineWidth) + Rect_FieldOfPlay->h;
 
 	//SIDELINE BOTTOM
 	//x = Rect_FieldOfPlay.x - endzone width
+	Rect_SidelineBottom.x = Rect_FieldOfPlay->x - endzoneWidth;
 	//y = Rect_FieldOfPlay.y + Sideline Width
+	Rect_SidelineBottom.y = Rect_FieldOfPlay->y + Rect_FieldOfPlay->h;
 	//w = FieldofPlay.w + 2 endzone width
+	Rect_SidelineBottom.w = Rect_FieldOfPlay->w + (2 * endzoneWidth);
 	//h = sideline width
+	Rect_SidelineBottom.h = sidelineWidth;
 
 	//SIDELINE RIGHT
-	//x = Rect_FieldOfPlay.x +  Rect_FieldOfPlay.w + endzone width
+	Rect_SidelineRight.x = Rect_FieldOfPlay->x +  Rect_FieldOfPlay->w + endzoneWidth;
 	//y = Rect_FieldOfPlay.y - Sideline Width
+	Rect_SidelineRight.y = Rect_FieldOfPlay->y - sidelineWidth;
 	//w = sideline width
+	Rect_SidelineRight.w = sidelineWidth;
 	//h = 2 sideline width + field width 
+	Rect_SidelineRight.h = (2 * sidelineWidth) + Rect_FieldOfPlay->h;
 	
 
 	//RENDER SIDELINES
 	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 	SDL_RenderFillRect(renderer, &Rect_SidelineTop);
-	//SDL_RenderFillRect(renderer, &Rect_SidelineLeft);
-	//SDL_RenderFillRect(renderer, &Rect_SidelineBottom);
-	//SDL_RenderFillRect(renderer, &Rect_SidelineRight);
+	SDL_RenderFillRect(renderer, &Rect_SidelineLeft);
+	SDL_RenderFillRect(renderer, &Rect_SidelineBottom);
+	SDL_RenderFillRect(renderer, &Rect_SidelineRight);
 	
 
 
