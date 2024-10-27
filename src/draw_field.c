@@ -49,9 +49,10 @@ void DrawGriddyField(SDL_Renderer *renderer)
 	//Draw Sidelines
 	DrawGriddySidelines(renderer, &Rect_FieldOfPlay);
 
+	//Draw Bench Area
+//	DrawGriddyBenchArea
 	//Draw Goals
 	//Draw Hash Marks
-	//Draw Bench Area
 	//Draw Perimeter
 }
 
@@ -165,26 +166,30 @@ void RenderGriddy(SDL_Renderer *renderer)
 void HandleResizeScreen() {
 	griddySDL_Data.screenSizeRect.w = griddySDL_Data.pollEvent.window.data1;
 	griddySDL_Data.screenSizeRect.h = griddySDL_Data.pollEvent.window.data2;
-
-//	HandleResizeField();
-	//printf("Window resized to %dx%d\n", griddySDLData.pollEvent.window.data1, griddySDLData.pollEvent.window.data2);
 }
 
 void CalcFieldLayout(SDL_Rect* Rect_Layout)
 {
+	float floatScreenWidth, floatLayoutLength;
+	floatScreenWidth = griddySDL_Data.screenSizeRect.w;
+	floatLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
 	//First use the width and then check if the height is too much, in that case use the height instead, but then also double check if the length is too much then print an error I guess (because it tried to limit on x and y and fialed both idk how that's possible basically so yeah
 	//
 	//First determine which is the limiting factor then use it as the basis for the field size
 	
 
-	//If the ration of W/H is less than L/W then use Y as the limiting factor
-	if ( griddySDL_Data.screenSizeRect.w / griddySDL_Data.screenSizeRect.h > FieldDimension_Griddy_Default.base.total_layout_length / FieldDimension_Griddy_Default.base.total_layout_width) {
-		printf("Y limiting factor\n");
-		Rect_Layout->h = griddySDL_Data.screenSizeRect.h - (griddySDL_Data.screenSizeRect.h / 5);
+
+	//If the ration of W/H is more than L/W then use Y as the limiting factor
+	//NOTE: I used to maintain a margin, it's abandoned (commented out) now
+	if ( floatScreenWidth / griddySDL_Data.screenSizeRect.h > floatLayoutLength / FieldDimension_Griddy_Default.base.total_layout_width) {
+		//Y limiting factor
+		printf("Y\n%d  :  %d\n%f\n", griddySDL_Data.screenSizeRect.w, griddySDL_Data.screenSizeRect.h, floatScreenWidth / griddySDL_Data.screenSizeRect.h);
+		Rect_Layout->h = griddySDL_Data.screenSizeRect.h; // - (griddySDL_Data.screenSizeRect.h / 5);
 		Rect_Layout->w = Rect_Layout->h * FieldDimension_Griddy_Default.base.total_layout_length / FieldDimension_Griddy_Default.base.total_layout_width;
 	} else {
-		printf("X limiting factor\n");
-		Rect_Layout->w = griddySDL_Data.screenSizeRect.w - (griddySDL_Data.screenSizeRect.w / 5);
+		//X limiting factor
+		printf("X\n%d  :  %d\n%f\n", griddySDL_Data.screenSizeRect.w, griddySDL_Data.screenSizeRect.h, floatScreenWidth / griddySDL_Data.screenSizeRect.h);
+		Rect_Layout->w = griddySDL_Data.screenSizeRect.w; // - (griddySDL_Data.screenSizeRect.w / 5);
 		Rect_Layout->h  = Rect_Layout->w * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
 	}
 
