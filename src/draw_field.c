@@ -20,8 +20,8 @@ FieldDimension_Griddy FieldDimension_Griddy_Default = {
 	.perimeter_width = 9,
 	.hash_marks_width = 0, //Should be idk the width they take up on the field
 	.hash_marks_length = 0,// Should be the distance between the actual marks I guess or the length of the actual marks
-	.goal_width = 0, //Widthe of the goal is distance between two goalposts
-.goal_line_length = 0, //length of the lines that represent the goalposts
+	.goal_width = 18.5, //Widthe of the goal is distance between two goalposts
+.goal_line_length = 6.5, //length of the lines that represent the goalposts IE the depts of the goal (length between uprights and goal post)
 };
 
 
@@ -52,7 +52,9 @@ void DrawGriddyField(SDL_Renderer *renderer)
 
 	//Draw Bench Area
 	DrawGriddyBenchArea(renderer, &Rect_FieldOfPlay);
+
 	//Draw Goals
+	DrawGriddyGoals();
 	//Draw Hash Marks
 	//Draw Perimeter
 }
@@ -331,4 +333,14 @@ void DrawGriddyBenchArea (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
 	SDL_RenderFillRect(renderer, &Rect_BenchAreaTop);
 	SDL_RenderFillRect(renderer, &Rect_BenchAreaBottom);
 }
+
+void DrawGriddyGoals(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay) 
+{
+
+	float x1, x2, ty, by;
+
+	//Just draw lines
+	//X1 and X2 should be the same
+	
+	
 
