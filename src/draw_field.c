@@ -40,6 +40,7 @@ void DrawGriddyField(SDL_Renderer *renderer)
 	//Draw Hot Pink total layout (which should all get covered up, right?)
 	SDL_SetRenderDrawColor (renderer, 255, 0, 255, 255);
 	SDL_RenderFillRect(renderer, &Rect_Layout);
+
 	//Draw Green Field of Play
 	DrawGriddyFieldOfPlay(renderer, &Rect_Layout, &Rect_FieldOfPlay);
 
@@ -50,7 +51,7 @@ void DrawGriddyField(SDL_Renderer *renderer)
 	DrawGriddySidelines(renderer, &Rect_FieldOfPlay);
 
 	//Draw Bench Area
-//	DrawGriddyBenchArea
+	DrawGriddyBenchArea(renderer, &Rect_FieldOfPlay);
 	//Draw Goals
 	//Draw Hash Marks
 	//Draw Perimeter
@@ -171,14 +172,19 @@ void HandleResizeScreen() {
 void CalcFieldLayout(SDL_Rect* Rect_Layout)
 {
 	float floatScreenWidth, floatLayoutLength;
+	int intLayoutWidth, intFieldLength, intLayoutLength;
 	floatScreenWidth = griddySDL_Data.screenSizeRect.w;
 	floatLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
+
+
+	intLayoutWidth = Rect_Layout->w;
+	intFieldLength = FieldDimension_Griddy_Default.field_length;
+	intLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
+
 	//First use the width and then check if the height is too much, in that case use the height instead, but then also double check if the length is too much then print an error I guess (because it tried to limit on x and y and fialed both idk how that's possible basically so yeah
 	//
 	//First determine which is the limiting factor then use it as the basis for the field size
 	
-
-
 	//If the ration of W/H is more than L/W then use Y as the limiting factor
 	//NOTE: I used to maintain a margin, it's abandoned (commented out) now
 	if ( floatScreenWidth / griddySDL_Data.screenSizeRect.h > floatLayoutLength / FieldDimension_Griddy_Default.base.total_layout_width) {
@@ -194,8 +200,12 @@ void CalcFieldLayout(SDL_Rect* Rect_Layout)
 	}
 
 	//This just ensures actual field of play is a multiple of 20
-	while ( (Rect_Layout->w * FieldDimension_Griddy_Default.field_length / FieldDimension_Griddy_Default.base.total_layout_length) % 20 != 0) {
+//	while ( (Rect_Layout->w * FieldDimension_Griddy_Default.field_length / FieldDimension_Griddy_Default.base.total_layout_length) % 20 != 0) {
+	while ( (intLayoutWidth * intFieldLength / intLayoutLength) % 20 != 0) {
 		Rect_Layout->w -= 1;
+		intLayoutWidth = Rect_Layout->w;
+		intFieldLength = FieldDimension_Griddy_Default.field_length;
+		intLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
 	}
 	Rect_Layout->h  = Rect_Layout->w * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
 
@@ -294,7 +304,31 @@ void DrawGriddySidelines (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
 	SDL_RenderFillRect(renderer, &Rect_SidelineBottom);
 	SDL_RenderFillRect(renderer, &Rect_SidelineRight);
 	
-
-
 }
-	
+
+void DrawGriddyBenchArea (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay) 
+{
+	SDL_Rect Rect_BenchAreaTop, Rect_BenchAreaBottom;
+	float fieldScale;
+
+	fieldScale = Rect_FieldOfPlay->w / FieldDimension_Griddy_Default.field_length;
+	printf("FIELD SCALE: %f\n", fieldScale);
+
+	//Calculate dimensions of the two Bench Areas (Proportional to the field of course)
+	Rect_BenchAreaTop.w = FieldDimension_Griddy_Default.bench_area_length * fieldScale;
+	Rect_BenchAreaTop.h = FieldDimension_Griddy_Default.bench_area_width * fieldScale; 
+	Rect_BenchAreaTop.x = Rect_FieldOfPlay->x + (FieldDimension_Griddy_Default.field_length - FieldDimension_Griddy_Default.bench_area_length) * fieldScale / 2;
+	Rect_BenchAreaTop.y = Rect_FieldOfPlay->y - (FieldDimension_Griddy_Default.bench_area_width * fieldScale) - (FieldDimension_Griddy_Default.sideline_width * fieldScale);
+
+	Rect_BenchAreaBottom.w = FieldDimension_Griddy_Default.bench_area_length * fieldScale;
+	Rect_BenchAreaBottom.h = FieldDimension_Griddy_Default.bench_area_width * fieldScale; 
+	Rect_BenchAreaBottom.x = Rect_FieldOfPlay->x + (FieldDimension_Griddy_Default.field_length - FieldDimension_Griddy_Default.bench_area_length) * fieldScale / 2;
+	Rect_BenchAreaBottom.y = Rect_FieldOfPlay->y + Rect_FieldOfPlay->h + (FieldDimension_Griddy_Default.sideline_width * fieldScale);
+
+	//Render the actual rectangles on the screen
+	SDL_SetRenderDrawColor (renderer, 255, 0, 0, 255);
+
+	SDL_RenderFillRect(renderer, &Rect_BenchAreaTop);
+	SDL_RenderFillRect(renderer, &Rect_BenchAreaBottom);
+}
+
