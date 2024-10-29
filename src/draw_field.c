@@ -18,8 +18,8 @@ FieldDimension_Griddy FieldDimension_Griddy_Default = {
 	.bench_area_length = 150,
 	.bench_area_width = 30,
 	.perimeter_width = 9,
-	.hash_marks_width = 0, //Should be idk the width they take up on the field
-	.hash_marks_length = 0,// Should be the distance between the actual marks I guess or the length of the actual marks
+	.hashSpaceWidth = 40,   // Width between the inner hashmark points (IE the width of the hash space)
+	.hashMarkLength = 4,  // Length of the actual hashes (Width is 2 inches btw but I'm using lines for now)
 	.goalWidth = 18.5, //Widthe of the goal is distance between two goalposts
 	.goalDepth = 6.5, //length of the lines that represent the goalposts IE the depts of the goal (length between uprights and goal post)
 };
@@ -52,7 +52,6 @@ void HandleResizeScreen() {
 	griddySDL_Data.screenSizeRect.w = griddySDL_Data.pollEvent.window.data1;
 	griddySDL_Data.screenSizeRect.h = griddySDL_Data.pollEvent.window.data2;
 }
-
 
 void DrawGriddyField(SDL_Renderer *renderer) 
 {
@@ -91,8 +90,12 @@ void DrawGriddyField(SDL_Renderer *renderer)
 
 	//Draw Goals
 	DrawGriddyGoals(renderer, &Rect_FieldOfPlay, &FieldDimension_Griddy_variableScale);
+
 	//Draw Hash Marks
+	DrawGriddyHashMarks(renderer, &Rect_FieldOfPlay, &FieldDimension_Griddy_variableScale, scale);
 	//Draw Perimeter
+	//Draw Numbers
+	//Draw players ?
 }
 
 void ScaleGriddyFieldOfPlay (SDL_Rect *Rect_Layout, SDL_Rect* Rect_FieldOfPlay)
@@ -356,13 +359,46 @@ void SetVariableGriddyDimensionScale (SDL_Rect *Rect_Layout, FieldDimension_Grid
 	FieldDimension_Griddy_variableScale->bench_area_length = scale * 150;
 	FieldDimension_Griddy_variableScale->bench_area_width = scale * 30;
 	FieldDimension_Griddy_variableScale->perimeter_width = scale * 9;
-	FieldDimension_Griddy_variableScale->hash_marks_width = scale * 0; //Should be idk the width they take up on the field
-	FieldDimension_Griddy_variableScale->hash_marks_length = scale * 0;// Should be the distance between the actual marks I guess or the length of the actual marks
+	FieldDimension_Griddy_variableScale->hashSpaceWidth = scale * FieldDimension_Griddy_Default.hashSpaceWidth; //Should be idk the width they take up on the field
+	FieldDimension_Griddy_variableScale->hashMarkLength = scale * FieldDimension_Griddy_Default.hashMarkLength;// Should be the distance between the actual marks I guess or the length of the actual marks
 	FieldDimension_Griddy_variableScale->goalWidth = scale * 18.5; //Widthe of the goal is distance between two goalposts
 	FieldDimension_Griddy_variableScale->goalDepth = scale * 6.5; 
 }
 
+void DrawGriddyHashMarks(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, float scale)
+{
 
+	//80 total marks. Every single yard excluding the 20 multiple of 5 yards with goal lines (counting 100 but not 0 because [i]ndex)
+	//each line pair has the same x
+	//all top lines share the same y
+	//all bottom lines share the same y
+	//all lines will be the same width
+	//
+	//
+	//
+	//
+	int i;
+	float y1, y2, y3, y4, midpoint, x;
 
+	midpoint = Rect_FieldOfPlay->y + (FieldDimension_Griddy_variableScale->field_width / 2);
+
+	y1 = midpoint - (FieldDimension_Griddy_variableScale->hashSpaceWidth / 2);
+	y2 = midpoint - (FieldDimension_Griddy_variableScale->hashSpaceWidth / 2) - FieldDimension_Griddy_variableScale->hashMarkLength;
+	
+	y3 = midpoint + (FieldDimension_Griddy_variableScale->hashSpaceWidth / 2);
+	y4 = midpoint + (FieldDimension_Griddy_variableScale->hashSpaceWidth / 2) + FieldDimension_Griddy_variableScale->hashMarkLength;
+
+	//Set color - White
+	SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);
+
+	for (i = 0; i < 100; i++) {
+	   if (i % 5 != 0) {
+		   x = Rect_FieldOfPlay->x + (Rect_FieldOfPlay->w * i / 100);
+
+		   SDL_RenderDrawLine(renderer, x, y1, x, y2);
+		   SDL_RenderDrawLine(renderer, x, y3, x, y4);
+	   }
+	}
+}
 
 
