@@ -20,15 +20,47 @@ FieldDimension_Griddy FieldDimension_Griddy_Default = {
 	.perimeter_width = 9,
 	.hash_marks_width = 0, //Should be idk the width they take up on the field
 	.hash_marks_length = 0,// Should be the distance between the actual marks I guess or the length of the actual marks
-	.goal_width = 18.5, //Widthe of the goal is distance between two goalposts
-.goal_line_length = 6.5, //length of the lines that represent the goalposts IE the depts of the goal (length between uprights and goal post)
+	.goalWidth = 18.5, //Widthe of the goal is distance between two goalposts
+	.goalDepth = 6.5, //length of the lines that represent the goalposts IE the depts of the goal (length between uprights and goal post)
 };
+
+int DrawScreen(SDL_Renderer *renderer) {
+
+	int GameScreen = false;
+	
+	if (GameScreen != GAME_SCREEN_TEST) {
+		printf ("GameScreen != GAME_SCREEN_TEST\n");
+		return false;
+	} else {
+		DrawGriddyField(renderer);
+
+		//DrawPlayers(renderer);
+
+		//Last thing you do before return like actually draw it onto the screen
+		RenderGriddy(renderer);
+		return true;
+	}
+}
+
+void RenderGriddy(SDL_Renderer *renderer)
+{
+	//Present the render
+	SDL_RenderPresent(renderer);
+}
+
+void HandleResizeScreen() {
+	griddySDL_Data.screenSizeRect.w = griddySDL_Data.pollEvent.window.data1;
+	griddySDL_Data.screenSizeRect.h = griddySDL_Data.pollEvent.window.data2;
+}
 
 
 void DrawGriddyField(SDL_Renderer *renderer) 
 {
-	//Initialize the rectanges we will be drawing: layout, field of play, endzones, sidelines, bench area etc	
+	//Initialize the rectangles we will be drawing: layout, field of play, endzones, sidelines, bench area etc	
 	SDL_Rect Rect_Layout, Rect_FieldOfPlay;
+	float scale;
+
+	FieldDimension_Griddy FieldDimension_Griddy_variableScale;
 
 	//Draw Black background - Clear the entire window and make it black
 	SDL_SetRenderDrawColor (renderer, 0, 0, 0, 255);
@@ -36,6 +68,10 @@ void DrawGriddyField(SDL_Renderer *renderer)
 
 	//Sets layout to scale with the window size
 	CalcFieldLayout(&Rect_Layout);
+
+	scale = Rect_Layout.w / FieldDimension_Griddy_Default.base.total_layout_length;
+
+	SetVariableGriddyDimensionScale(&Rect_Layout, &FieldDimension_Griddy_variableScale, scale);
 
 	//Draw Hot Pink total layout (which should all get covered up, right?)
 	SDL_SetRenderDrawColor (renderer, 255, 0, 255, 255);
@@ -54,7 +90,7 @@ void DrawGriddyField(SDL_Renderer *renderer)
 	DrawGriddyBenchArea(renderer, &Rect_FieldOfPlay);
 
 	//Draw Goals
-	DrawGriddyGoals();
+	DrawGriddyGoals(renderer, &Rect_FieldOfPlay, &FieldDimension_Griddy_variableScale);
 	//Draw Hash Marks
 	//Draw Perimeter
 }
@@ -75,7 +111,6 @@ void DrawGriddyFieldOfPlay (SDL_Renderer *renderer, SDL_Rect *Rect_Layout, SDL_R
 {
 
 	ScaleGriddyFieldOfPlay(Rect_Layout, Rect_FieldOfPlay);
-
 
 	//The field should be green so that's the color we're going to draw
 	SDL_SetRenderDrawColor (renderer, 80, 180, 100, 255);
@@ -102,119 +137,6 @@ void DrawGriddyYardLines(SDL_Renderer *renderer, SDL_Rect *fieldOfPlay_Rect)
 		SDL_RenderDrawLine(renderer, fieldOfPlay_Rect->x + (fieldOfPlay_Rect->w / 20 * i), fieldOfPlay_Rect->y, fieldOfPlay_Rect->x + (fieldOfPlay_Rect->w / 20 * i), fieldOfPlay_Rect->y + fieldOfPlay_Rect->h); 
 
 	}	
-}
-
-int DrawScreen(SDL_Renderer *renderer) {
-
-	int GameScreen = false;
-	
-	if (GameScreen != GAME_SCREEN_TEST) {
-		printf ("GameScreen != GAME_SCREEN_TEST\n");
-		return false;
-	} else {
-		DrawGriddyField(renderer);
-
-		//DrawPlayers(renderer);
-
-		//Last thing you do before return like actually draw it onto the screen
-		RenderGriddy(renderer);
-		return true;
-	}
-}
-
-void DrawFieldGoals(SDL_Renderer *renderer)
-{
-//	int x, y, w, h, x1, y1, x2, y2, goalWidth;
-//	//this is the total width of the field
-////	x = griddySDLData.fieldRect.x;
-////	//upper limit is y value of the fieldRect as defined
-////	y = griddySDLData.fieldRect.y;
-////	//this is just the x value where the top left corner of the field is
-////	w = griddySDLData.fieldRect.w;
-////	//This is the total height (which goes down btw) of the field	
-////	h = griddySDLData.fieldRect.h; 
-//	//goalWidth is the length of the lines which draw the goalpost limits (it's width on this 2d field but it's 'depth' in the 3d field)
-//	//goalWidth = w / 20;
-//
-//	//Goals are at the end of the endzone which is not currently inside fieldRect (maybe fix this right idk)
-//
-//	//Goals are yellow
-//	SDL_SetRenderDrawColor (renderer, 255, 215, 0, 255);
-//
-//	//Draw Left Goals
-//	
-//	//Draw top left goal line (horizontal line that forms the north limit of the left goal)
-//	x1 = x - goalWidth;
-//	y1 = y +  (3.5 * h / 8);
-//	x2 = x + goalWidth;
-//	SDL_RenderDrawLine(renderer, x1, y1, x2, y1);
-//
-//	//Draw bottom left goal line
-//	y2 = y + (4.5 * h / 8);
-//	SDL_RenderDrawLine(renderer, x1, y2, x2, y2);
-//	
-//	//Draw Right Goals
-//	x1 = x + w - goalWidth;
-//	x2 = x + w + goalWidth;
-//	SDL_RenderDrawLine(renderer, x1, y1, x2, y1);
-//	SDL_RenderDrawLine(renderer, x1, y2, x2, y2);
-}
-
-void RenderGriddy(SDL_Renderer *renderer)
-{
-	//Present the render
-	SDL_RenderPresent(renderer);
-}
-
-void HandleResizeScreen() {
-	griddySDL_Data.screenSizeRect.w = griddySDL_Data.pollEvent.window.data1;
-	griddySDL_Data.screenSizeRect.h = griddySDL_Data.pollEvent.window.data2;
-}
-
-void CalcFieldLayout(SDL_Rect* Rect_Layout)
-{
-	float floatScreenWidth, floatLayoutLength;
-	int intLayoutWidth, intFieldLength, intLayoutLength;
-	floatScreenWidth = griddySDL_Data.screenSizeRect.w;
-	floatLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
-
-
-	intLayoutWidth = Rect_Layout->w;
-	intFieldLength = FieldDimension_Griddy_Default.field_length;
-	intLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
-
-	//First use the width and then check if the height is too much, in that case use the height instead, but then also double check if the length is too much then print an error I guess (because it tried to limit on x and y and fialed both idk how that's possible basically so yeah
-	//
-	//First determine which is the limiting factor then use it as the basis for the field size
-	
-	//If the ration of W/H is more than L/W then use Y as the limiting factor
-	//NOTE: I used to maintain a margin, it's abandoned (commented out) now
-	if ( floatScreenWidth / griddySDL_Data.screenSizeRect.h > floatLayoutLength / FieldDimension_Griddy_Default.base.total_layout_width) {
-		//Y limiting factor
-		printf("Y\n%d  :  %d\n%f\n", griddySDL_Data.screenSizeRect.w, griddySDL_Data.screenSizeRect.h, floatScreenWidth / griddySDL_Data.screenSizeRect.h);
-		Rect_Layout->h = griddySDL_Data.screenSizeRect.h; // - (griddySDL_Data.screenSizeRect.h / 5);
-		Rect_Layout->w = Rect_Layout->h * FieldDimension_Griddy_Default.base.total_layout_length / FieldDimension_Griddy_Default.base.total_layout_width;
-	} else {
-		//X limiting factor
-		printf("X\n%d  :  %d\n%f\n", griddySDL_Data.screenSizeRect.w, griddySDL_Data.screenSizeRect.h, floatScreenWidth / griddySDL_Data.screenSizeRect.h);
-		Rect_Layout->w = griddySDL_Data.screenSizeRect.w; // - (griddySDL_Data.screenSizeRect.w / 5);
-		Rect_Layout->h  = Rect_Layout->w * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
-	}
-
-	//This just ensures actual field of play is a multiple of 20
-//	while ( (Rect_Layout->w * FieldDimension_Griddy_Default.field_length / FieldDimension_Griddy_Default.base.total_layout_length) % 20 != 0) {
-	while ( (intLayoutWidth * intFieldLength / intLayoutLength) % 20 != 0) {
-		Rect_Layout->w -= 1;
-		intLayoutWidth = Rect_Layout->w;
-		intFieldLength = FieldDimension_Griddy_Default.field_length;
-		intLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
-	}
-	Rect_Layout->h  = Rect_Layout->w * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
-
-
-	//SET MARGINS - Total Margin is the difference between the screensize and the layout size / one side margin is half that	
-	Rect_Layout->x = (griddySDL_Data.screenSizeRect.w - Rect_Layout->w) / 2;
-	Rect_Layout->y = (griddySDL_Data.screenSizeRect.h - Rect_Layout->h) / 2;
 }
 
 void DrawGriddyEndzones (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
@@ -334,13 +256,113 @@ void DrawGriddyBenchArea (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
 	SDL_RenderFillRect(renderer, &Rect_BenchAreaBottom);
 }
 
-void DrawGriddyGoals(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay) 
+void DrawGriddyGoals(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale) 
+{
+	int x1, x2, x3, x4, y1, y2;
+
+	// Left goal
+	// Top Line
+	// Y1 and Y2 should be the same
+	// goalDepth = X2 - X1
+	x2 = Rect_FieldOfPlay->x - FieldDimension_Griddy_variableScale->endzone_length;
+	x1 = x2 - FieldDimension_Griddy_variableScale->goalDepth;
+	printf("X2: %d\n", x2);
+
+	x3 = Rect_FieldOfPlay->x + Rect_FieldOfPlay->w + FieldDimension_Griddy_variableScale->endzone_length;
+	x4 = x3 + FieldDimension_Griddy_variableScale->goalDepth;
+
+	//To get Y you must find the midpoint of the field then either add or subtract HALF of the goal width
+	
+	//midpoint = Rect_FieldOfPlay->y + (Rect_FieldOfPlay->h / 2)
+	y1 = Rect_FieldOfPlay->y + (Rect_FieldOfPlay->h / 2) - (FieldDimension_Griddy_variableScale->goalWidth / 2);
+	y2 = Rect_FieldOfPlay->y + (Rect_FieldOfPlay->h / 2) + (FieldDimension_Griddy_variableScale->goalWidth / 2);
+
+	//Set the color
+	SDL_SetRenderDrawColor (renderer, 255, 215, 99, 255);
+
+	//Draw lines
+	
+	//Top Left
+	SDL_RenderDrawLine(renderer, x1, y1, x2, y1);
+	//Bottom Left
+	SDL_RenderDrawLine(renderer, x1, y2, x2, y2);
+	//Top Right
+	SDL_RenderDrawLine(renderer, x3, y1, x4, y1);
+	//Bottom Right
+	SDL_RenderDrawLine(renderer, x3, y2, x4, y2);
+}
+
+void CalcFieldLayout(SDL_Rect* Rect_Layout)
+{
+	float floatScreenWidth, floatLayoutLength;
+	int intLayoutWidth, intFieldLength, intLayoutLength;
+	floatScreenWidth = griddySDL_Data.screenSizeRect.w;
+	floatLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
+
+
+	//First use the width and then check if the height is too much, in that case use the height instead, but then also double check if the length is too much then print an error I guess (because it tried to limit on x and y and fialed both idk how that's possible basically so yeah
+	//
+	//First determine which is the limiting factor then use it as the basis for the field size
+	
+	//If the ration of W/H is more than L/W then use Y as the limiting factor
+	//NOTE: I used to maintain a margin, it's abandoned (commented out) now
+	if ( floatScreenWidth / griddySDL_Data.screenSizeRect.h > floatLayoutLength / FieldDimension_Griddy_Default.base.total_layout_width) {
+		//Y limiting factor
+		printf("Y\n%d  :  %d\n%f\n", griddySDL_Data.screenSizeRect.w, griddySDL_Data.screenSizeRect.h, floatScreenWidth / griddySDL_Data.screenSizeRect.h);
+		Rect_Layout->h = griddySDL_Data.screenSizeRect.h; // - (griddySDL_Data.screenSizeRect.h / 5);
+		Rect_Layout->w = Rect_Layout->h * FieldDimension_Griddy_Default.base.total_layout_length / FieldDimension_Griddy_Default.base.total_layout_width;
+	} else {
+		//X limiting factor
+		printf("X\n%d  :  %d\n%f\n", griddySDL_Data.screenSizeRect.w, griddySDL_Data.screenSizeRect.h, floatScreenWidth / griddySDL_Data.screenSizeRect.h);
+		Rect_Layout->w = griddySDL_Data.screenSizeRect.w; // - (griddySDL_Data.screenSizeRect.w / 5);
+		Rect_Layout->h  = Rect_Layout->w * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
+	}
+
+	intLayoutWidth = Rect_Layout->w;
+	intFieldLength = FieldDimension_Griddy_Default.field_length;
+	intLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
+
+	//This just ensures actual field of play is a multiple of 20
+//	while ( (Rect_Layout->w * FieldDimension_Griddy_Default.field_length / FieldDimension_Griddy_Default.base.total_layout_length) % 20 != 0) {
+	while ( (intLayoutWidth * intFieldLength / intLayoutLength) % 20 != 0) {
+		Rect_Layout->w -= 1;
+		intLayoutWidth = Rect_Layout->w;
+		intFieldLength = FieldDimension_Griddy_Default.field_length;
+		intLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
+	}
+	Rect_Layout->h  = Rect_Layout->w * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
+
+	//SET MARGINS - Total Margin is the difference between the screensize and the layout size / one side margin is half that	
+	Rect_Layout->x = (griddySDL_Data.screenSizeRect.w - Rect_Layout->w) / 2;
+	Rect_Layout->y = (griddySDL_Data.screenSizeRect.h - Rect_Layout->h) / 2;
+}
+
+void SetVariableGriddyDimensionScale (SDL_Rect *Rect_Layout, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, float scale)
 {
 
-	float x1, x2, ty, by;
+	//Define a porportional set of field data so I'm not just constantly doing scalar multiplication
 
-	//Just draw lines
-	//X1 and X2 should be the same
-	
-	
+	printf("SCALE: %f\n", scale);	
+
+	//Create a scale multiplier so I'm not just doing calcs on each line
+
+	FieldDimension_Griddy_variableScale->base.total_layout_length = scale * 390;
+	FieldDimension_Griddy_variableScale->base.total_layout_width = scale * 250;
+	FieldDimension_Griddy_variableScale->base.FieldType = scale * FIELD_TYPE_GRIDDY;
+	FieldDimension_Griddy_variableScale->field_length = scale * 300;
+	FieldDimension_Griddy_variableScale->field_width = scale * 160;
+	FieldDimension_Griddy_variableScale->endzone_length = scale * 30;
+	FieldDimension_Griddy_variableScale->sideline_width = scale * 6;
+	FieldDimension_Griddy_variableScale->bench_area_length = scale * 150;
+	FieldDimension_Griddy_variableScale->bench_area_width = scale * 30;
+	FieldDimension_Griddy_variableScale->perimeter_width = scale * 9;
+	FieldDimension_Griddy_variableScale->hash_marks_width = scale * 0; //Should be idk the width they take up on the field
+	FieldDimension_Griddy_variableScale->hash_marks_length = scale * 0;// Should be the distance between the actual marks I guess or the length of the actual marks
+	FieldDimension_Griddy_variableScale->goalWidth = scale * 18.5; //Widthe of the goal is distance between two goalposts
+	FieldDimension_Griddy_variableScale->goalDepth = scale * 6.5; 
+}
+
+
+
+
 
