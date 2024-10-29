@@ -1,5 +1,6 @@
 #include "draw_field.h"
 #include "global.h"
+#include "load_field_textures.h"
 #include <SDL2/SDL.h>
 #include <stdio.h>
 
@@ -22,6 +23,9 @@ FieldDimension_Griddy FieldDimension_Griddy_Default = {
 	.hashMarkLength = 4,  // Length of the actual hashes (Width is 2 inches btw but I'm using lines for now)
 	.goalWidth = 18.5, //Widthe of the goal is distance between two goalposts
 	.goalDepth = 6.5, //length of the lines that represent the goalposts IE the depts of the goal (length between uprights and goal post)
+
+	.numberHeight = 6,
+	.numberWidth = 4,
 };
 
 int DrawScreen(SDL_Renderer *renderer) {
@@ -93,8 +97,9 @@ void DrawGriddyField(SDL_Renderer *renderer)
 
 	//Draw Hash Marks
 	DrawGriddyHashMarks(renderer, &Rect_FieldOfPlay, &FieldDimension_Griddy_variableScale, scale);
-	//Draw Perimeter
 	//Draw Numbers
+	DrawGriddyFieldNumbers(renderer, &Rect_FieldOfPlay, &FieldDimension_Griddy_variableScale, scale);
+
 	//Draw players ?
 }
 
@@ -239,7 +244,6 @@ void DrawGriddyBenchArea (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
 	float fieldScale;
 
 	fieldScale = Rect_FieldOfPlay->w / FieldDimension_Griddy_Default.field_length;
-	printf("FIELD SCALE: %f\n", fieldScale);
 
 	//Calculate dimensions of the two Bench Areas (Proportional to the field of course)
 	Rect_BenchAreaTop.w = FieldDimension_Griddy_Default.bench_area_length * fieldScale;
@@ -269,7 +273,6 @@ void DrawGriddyGoals(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, FieldDi
 	// goalDepth = X2 - X1
 	x2 = Rect_FieldOfPlay->x - FieldDimension_Griddy_variableScale->endzone_length;
 	x1 = x2 - FieldDimension_Griddy_variableScale->goalDepth;
-	printf("X2: %d\n", x2);
 
 	x3 = Rect_FieldOfPlay->x + Rect_FieldOfPlay->w + FieldDimension_Griddy_variableScale->endzone_length;
 	x4 = x3 + FieldDimension_Griddy_variableScale->goalDepth;
@@ -311,12 +314,10 @@ void CalcFieldLayout(SDL_Rect* Rect_Layout)
 	//NOTE: I used to maintain a margin, it's abandoned (commented out) now
 	if ( floatScreenWidth / griddySDL_Data.screenSizeRect.h > floatLayoutLength / FieldDimension_Griddy_Default.base.total_layout_width) {
 		//Y limiting factor
-		printf("Y\n%d  :  %d\n%f\n", griddySDL_Data.screenSizeRect.w, griddySDL_Data.screenSizeRect.h, floatScreenWidth / griddySDL_Data.screenSizeRect.h);
 		Rect_Layout->h = griddySDL_Data.screenSizeRect.h; // - (griddySDL_Data.screenSizeRect.h / 5);
 		Rect_Layout->w = Rect_Layout->h * FieldDimension_Griddy_Default.base.total_layout_length / FieldDimension_Griddy_Default.base.total_layout_width;
 	} else {
 		//X limiting factor
-		printf("X\n%d  :  %d\n%f\n", griddySDL_Data.screenSizeRect.w, griddySDL_Data.screenSizeRect.h, floatScreenWidth / griddySDL_Data.screenSizeRect.h);
 		Rect_Layout->w = griddySDL_Data.screenSizeRect.w; // - (griddySDL_Data.screenSizeRect.w / 5);
 		Rect_Layout->h  = Rect_Layout->w * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
 	}
@@ -345,10 +346,6 @@ void SetVariableGriddyDimensionScale (SDL_Rect *Rect_Layout, FieldDimension_Grid
 
 	//Define a porportional set of field data so I'm not just constantly doing scalar multiplication
 
-	printf("SCALE: %f\n", scale);	
-
-	//Create a scale multiplier so I'm not just doing calcs on each line
-
 	FieldDimension_Griddy_variableScale->base.total_layout_length = scale * 390;
 	FieldDimension_Griddy_variableScale->base.total_layout_width = scale * 250;
 	FieldDimension_Griddy_variableScale->base.FieldType = scale * FIELD_TYPE_GRIDDY;
@@ -363,20 +360,14 @@ void SetVariableGriddyDimensionScale (SDL_Rect *Rect_Layout, FieldDimension_Grid
 	FieldDimension_Griddy_variableScale->hashMarkLength = scale * FieldDimension_Griddy_Default.hashMarkLength;// Should be the distance between the actual marks I guess or the length of the actual marks
 	FieldDimension_Griddy_variableScale->goalWidth = scale * 18.5; //Widthe of the goal is distance between two goalposts
 	FieldDimension_Griddy_variableScale->goalDepth = scale * 6.5; 
+	
+	FieldDimension_Griddy_variableScale->numberHeight = scale * FieldDimension_Griddy_Default.numberHeight; 
+	FieldDimension_Griddy_variableScale->numberWidth = scale * FieldDimension_Griddy_Default.numberWidth; 
+
 }
 
 void DrawGriddyHashMarks(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, float scale)
 {
-
-	//80 total marks. Every single yard excluding the 20 multiple of 5 yards with goal lines (counting 100 but not 0 because [i]ndex)
-	//each line pair has the same x
-	//all top lines share the same y
-	//all bottom lines share the same y
-	//all lines will be the same width
-	//
-	//
-	//
-	//
 	int i;
 	float y1, y2, y3, y4, midpoint, x;
 
@@ -394,11 +385,25 @@ void DrawGriddyHashMarks(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, Fie
 	for (i = 0; i < 100; i++) {
 	   if (i % 5 != 0) {
 		   x = Rect_FieldOfPlay->x + (Rect_FieldOfPlay->w * i / 100);
-
 		   SDL_RenderDrawLine(renderer, x, y1, x, y2);
 		   SDL_RenderDrawLine(renderer, x, y3, x, y4);
 	   }
 	}
+}
+
+void DrawGriddyFieldNumbers(SDL_Renderer *renderer,SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, float scale)
+{
+	//Test draw 3 in the middle of the field
+	
+	SDL_Rect Rect_FieldNum3;
+
+	Rect_FieldNum3.x = Rect_FieldOfPlay->x + (FieldDimension_Griddy_variableScale->field_length / 2) - (FieldDimension_Griddy_variableScale->numberWidth / 2);
+	Rect_FieldNum3.y = Rect_FieldOfPlay->y + (FieldDimension_Griddy_variableScale->field_width / 2) - (FieldDimension_Griddy_variableScale->numberHeight / 2);
+
+	Rect_FieldNum3.w = FieldDimension_Griddy_variableScale->numberWidth;
+	Rect_FieldNum3.h = FieldDimension_Griddy_variableScale->numberHeight;
+
+	SDL_RenderCopy(renderer, textures[1], NULL, &Rect_FieldNum3);
 }
 
 

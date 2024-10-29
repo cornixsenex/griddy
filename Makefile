@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Iinclude
 SDL_CFLAGS = $(shell sdl2-config --cflags)
-SDL_LDFLAGS = $(shell sdl2-config --libs)
+SDL_LDFLAGS = $(shell sdl2-config --libs) -lSDL2_image
 SRC_DIR = src
 INCLUDE_DIR = include
 

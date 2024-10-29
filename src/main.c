@@ -2,6 +2,7 @@
 #include "init_sdl.h"
 #include "draw_field.h"
 #include "global.h"
+#include "load_field_textures.h"
 #include "main.h"
 
 int main(void) {
@@ -9,20 +10,28 @@ int main(void) {
 	//SDL Init bootup	
 	initSDL();
 
+	LoadFieldTextures();
+
 	//main loop
 	main_loop();
 
 	//CLEANUP
 	
-	//Destroy the renderer
-	SDL_DestroyRenderer(griddySDL_Data.renderer);
-	//Close part 1
-	SDL_DestroyWindow(griddySDL_Data.fieldWindow);
-	//Close part 2
-	SDL_Quit();
+	main_cleanup();
+	
+	//Destroy all loaded textures
+	
 	//ALL GOOD
 	printf("EXIT 0\n");
 	return 0;
+}
+
+void main_cleanup()
+{
+	DestroyFieldTextures();
+	SDL_DestroyRenderer(griddySDL_Data.renderer);
+	SDL_DestroyWindow(griddySDL_Data.fieldWindow);
+	SDL_Quit();
 }
 
 void main_loop() {
