@@ -12,8 +12,8 @@ FieldDimension_Griddy FieldDimension_Griddy_Default = {
 		.total_layout_width = 250,
 		.FieldType = FIELD_TYPE_GRIDDY,
 	},
-	.field_length = 300,
-	.field_width = 160,
+	.fieldLength = 300,
+	.fieldWidth = 160,
 	.endzone_length = 30,
 	.sideline_width = 6,
 	.bench_area_length = 150,
@@ -26,6 +26,7 @@ FieldDimension_Griddy FieldDimension_Griddy_Default = {
 
 	.numberHeight = 6,
 	.numberWidth = 4,
+	.numberMargin = 21, //The space between the number and the sideline (tops of number 9 yards, number 2 yards tall, bottom of number to sideline is 7 yards = 21 feet
 };
 
 int DrawScreen(SDL_Renderer *renderer) {
@@ -105,10 +106,10 @@ void DrawGriddyField(SDL_Renderer *renderer)
 
 void ScaleGriddyFieldOfPlay (SDL_Rect *Rect_Layout, SDL_Rect* Rect_FieldOfPlay)
 {
-	//The length of the playing field (width of the FieldOfPlay_Rect) which is equal to layoutRect.w * .field_length   / .total_layout_length
-	Rect_FieldOfPlay->w = Rect_Layout->w * FieldDimension_Griddy_Default.field_length / FieldDimension_Griddy_Default.base.total_layout_length;
-	//The width of the playing field (height of the FieldOfPlay_Rect) which is equal to  layoutRect.h * .field_width / .total_layout_width 
-	Rect_FieldOfPlay->h = Rect_Layout->h * FieldDimension_Griddy_Default.field_width / FieldDimension_Griddy_Default.base.total_layout_width;
+	//The length of the playing field (width of the FieldOfPlay_Rect) which is equal to layoutRect.w * .fieldLength   / .total_layout_length
+	Rect_FieldOfPlay->w = Rect_Layout->w * FieldDimension_Griddy_Default.fieldLength / FieldDimension_Griddy_Default.base.total_layout_length;
+	//The width of the playing field (height of the FieldOfPlay_Rect) which is equal to  layoutRect.h * .fieldWidth / .total_layout_width 
+	Rect_FieldOfPlay->h = Rect_Layout->h * FieldDimension_Griddy_Default.fieldWidth / FieldDimension_Griddy_Default.base.total_layout_width;
 
 	//Calculate the XY of the fieldOfPlay_Rect - Find the total difference between layout and fieldOfPlay then divide that in half to get the top left coordinates
 	Rect_FieldOfPlay->x = Rect_Layout->x + ( (Rect_Layout->w - Rect_FieldOfPlay->w) / 2);
@@ -188,8 +189,8 @@ void DrawGriddySidelines (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
 	SDL_Rect Rect_SidelineTop, Rect_SidelineLeft, Rect_SidelineBottom, Rect_SidelineRight;
 
 	//Make sure the endzone and sidelines are proprotional to the field
-	endzoneWidth = Rect_FieldOfPlay->w * FieldDimension_Griddy_Default.endzone_length / FieldDimension_Griddy_Default.field_length; 
-	sidelineWidth = Rect_FieldOfPlay->w * FieldDimension_Griddy_Default.sideline_width / FieldDimension_Griddy_Default.field_length; 
+	endzoneWidth = Rect_FieldOfPlay->w * FieldDimension_Griddy_Default.endzone_length / FieldDimension_Griddy_Default.fieldLength; 
+	sidelineWidth = Rect_FieldOfPlay->w * FieldDimension_Griddy_Default.sideline_width / FieldDimension_Griddy_Default.fieldLength; 
 
 	//Get dimensions for
 	
@@ -243,17 +244,17 @@ void DrawGriddyBenchArea (SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay)
 	SDL_Rect Rect_BenchAreaTop, Rect_BenchAreaBottom;
 	float fieldScale;
 
-	fieldScale = Rect_FieldOfPlay->w / FieldDimension_Griddy_Default.field_length;
+	fieldScale = Rect_FieldOfPlay->w / FieldDimension_Griddy_Default.fieldLength;
 
 	//Calculate dimensions of the two Bench Areas (Proportional to the field of course)
 	Rect_BenchAreaTop.w = FieldDimension_Griddy_Default.bench_area_length * fieldScale;
 	Rect_BenchAreaTop.h = FieldDimension_Griddy_Default.bench_area_width * fieldScale; 
-	Rect_BenchAreaTop.x = Rect_FieldOfPlay->x + (FieldDimension_Griddy_Default.field_length - FieldDimension_Griddy_Default.bench_area_length) * fieldScale / 2;
+	Rect_BenchAreaTop.x = Rect_FieldOfPlay->x + (FieldDimension_Griddy_Default.fieldLength - FieldDimension_Griddy_Default.bench_area_length) * fieldScale / 2;
 	Rect_BenchAreaTop.y = Rect_FieldOfPlay->y - (FieldDimension_Griddy_Default.bench_area_width * fieldScale) - (FieldDimension_Griddy_Default.sideline_width * fieldScale);
 
 	Rect_BenchAreaBottom.w = FieldDimension_Griddy_Default.bench_area_length * fieldScale;
 	Rect_BenchAreaBottom.h = FieldDimension_Griddy_Default.bench_area_width * fieldScale; 
-	Rect_BenchAreaBottom.x = Rect_FieldOfPlay->x + (FieldDimension_Griddy_Default.field_length - FieldDimension_Griddy_Default.bench_area_length) * fieldScale / 2;
+	Rect_BenchAreaBottom.x = Rect_FieldOfPlay->x + (FieldDimension_Griddy_Default.fieldLength - FieldDimension_Griddy_Default.bench_area_length) * fieldScale / 2;
 	Rect_BenchAreaBottom.y = Rect_FieldOfPlay->y + Rect_FieldOfPlay->h + (FieldDimension_Griddy_Default.sideline_width * fieldScale);
 
 	//Render the actual rectangles on the screen
@@ -323,15 +324,15 @@ void CalcFieldLayout(SDL_Rect* Rect_Layout)
 	}
 
 	intLayoutWidth = Rect_Layout->w;
-	intFieldLength = FieldDimension_Griddy_Default.field_length;
+	intFieldLength = FieldDimension_Griddy_Default.fieldLength;
 	intLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
 
 	//This just ensures actual field of play is a multiple of 20
-//	while ( (Rect_Layout->w * FieldDimension_Griddy_Default.field_length / FieldDimension_Griddy_Default.base.total_layout_length) % 20 != 0) {
+//	while ( (Rect_Layout->w * FieldDimension_Griddy_Default.fieldLength / FieldDimension_Griddy_Default.base.total_layout_length) % 20 != 0) {
 	while ( (intLayoutWidth * intFieldLength / intLayoutLength) % 20 != 0) {
 		Rect_Layout->w -= 1;
 		intLayoutWidth = Rect_Layout->w;
-		intFieldLength = FieldDimension_Griddy_Default.field_length;
+		intFieldLength = FieldDimension_Griddy_Default.fieldLength;
 		intLayoutLength = FieldDimension_Griddy_Default.base.total_layout_length;
 	}
 	Rect_Layout->h  = Rect_Layout->w * FieldDimension_Griddy_Default.base.total_layout_width / FieldDimension_Griddy_Default.base.total_layout_length;
@@ -349,8 +350,8 @@ void SetVariableGriddyDimensionScale (SDL_Rect *Rect_Layout, FieldDimension_Grid
 	FieldDimension_Griddy_variableScale->base.total_layout_length = scale * 390;
 	FieldDimension_Griddy_variableScale->base.total_layout_width = scale * 250;
 	FieldDimension_Griddy_variableScale->base.FieldType = scale * FIELD_TYPE_GRIDDY;
-	FieldDimension_Griddy_variableScale->field_length = scale * 300;
-	FieldDimension_Griddy_variableScale->field_width = scale * 160;
+	FieldDimension_Griddy_variableScale->fieldLength = scale * 300;
+	FieldDimension_Griddy_variableScale->fieldWidth = scale * 160;
 	FieldDimension_Griddy_variableScale->endzone_length = scale * 30;
 	FieldDimension_Griddy_variableScale->sideline_width = scale * 6;
 	FieldDimension_Griddy_variableScale->bench_area_length = scale * 150;
@@ -363,6 +364,7 @@ void SetVariableGriddyDimensionScale (SDL_Rect *Rect_Layout, FieldDimension_Grid
 	
 	FieldDimension_Griddy_variableScale->numberHeight = scale * FieldDimension_Griddy_Default.numberHeight; 
 	FieldDimension_Griddy_variableScale->numberWidth = scale * FieldDimension_Griddy_Default.numberWidth; 
+	FieldDimension_Griddy_variableScale->numberMargin = scale * FieldDimension_Griddy_Default.numberMargin; 
 
 }
 
@@ -371,7 +373,7 @@ void DrawGriddyHashMarks(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, Fie
 	int i;
 	float y1, y2, y3, y4, midpoint, x;
 
-	midpoint = Rect_FieldOfPlay->y + (FieldDimension_Griddy_variableScale->field_width / 2);
+	midpoint = Rect_FieldOfPlay->y + (FieldDimension_Griddy_variableScale->fieldWidth / 2);
 
 	y1 = midpoint - (FieldDimension_Griddy_variableScale->hashSpaceWidth / 2);
 	y2 = midpoint - (FieldDimension_Griddy_variableScale->hashSpaceWidth / 2) - FieldDimension_Griddy_variableScale->hashMarkLength;
@@ -397,13 +399,17 @@ void DrawGriddyFieldNumbers(SDL_Renderer *renderer,SDL_Rect *Rect_FieldOfPlay, F
 	
 	SDL_Rect Rect_FieldNum3;
 
-	Rect_FieldNum3.x = Rect_FieldOfPlay->x + (FieldDimension_Griddy_variableScale->field_length / 2) - (FieldDimension_Griddy_variableScale->numberWidth / 2);
-	Rect_FieldNum3.y = Rect_FieldOfPlay->y + (FieldDimension_Griddy_variableScale->field_width / 2) - (FieldDimension_Griddy_variableScale->numberHeight / 2);
+	//one foot margin between end of letter and goal line
+	//X should be FieldRect.x + i * FielRect.w / 10 - distance between number and line
+	//X is find the yard line then subtrack 1 then subtract numberWidth
+	Rect_FieldNum3.x = Rect_FieldOfPlay->x + (3 * FieldDimension_Griddy_variableScale->fieldLength / 10) - 3 - FieldDimension_Griddy_variableScale->numberWidth;
+	//Y is just go down to field h and then subtract margin then subtrack num height
+	Rect_FieldNum3.y = Rect_FieldOfPlay->y + FieldDimension_Griddy_variableScale->fieldWidth - FieldDimension_Griddy_variableScale->numberMargin - FieldDimension_Griddy_variableScale->numberHeight;
 
 	Rect_FieldNum3.w = FieldDimension_Griddy_variableScale->numberWidth;
 	Rect_FieldNum3.h = FieldDimension_Griddy_variableScale->numberHeight;
 
-	SDL_RenderCopy(renderer, textures[1], NULL, &Rect_FieldNum3);
+	SDL_RenderCopy(renderer, textures[TEXTURE_FIELD_NUM3], NULL, &Rect_FieldNum3);
 }
 
 

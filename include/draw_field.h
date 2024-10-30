@@ -14,8 +14,8 @@ typedef struct {
 
 typedef struct {
 	FieldDimension base;
-	float field_length;
-	float field_width;
+	float fieldLength;
+	float fieldWidth;
 	float endzone_length;
 	float sideline_width;
 	float bench_area_length; //25 to 25 lines that's 50 yards = 150 feet
@@ -27,13 +27,14 @@ typedef struct {
 	float goalDepth;
 	float numberHeight;
 	float numberWidth;
+	float numberMargin;
 	//int bench_area_length;
 } FieldDimension_Griddy;
 
 typedef struct {
 	FieldDimension base;
-	float field_width;
-	float field_length;
+	float fieldWidth;
+	float fieldLength;
 	//etc
 } FieldDimension_Footy;
 
