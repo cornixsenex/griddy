@@ -409,7 +409,8 @@ void DrawGriddyFieldNumbers(SDL_Renderer *renderer,SDL_Rect *Rect_FieldOfPlay, F
 	Rect_FieldNum3.w = FieldDimension_Griddy_variableScale->numberWidth;
 	Rect_FieldNum3.h = FieldDimension_Griddy_variableScale->numberHeight;
 
-	SDL_RenderCopy(renderer, textures[TEXTURE_FIELD_NUM3], NULL, &Rect_FieldNum3);
+	//SDL_RenderCopy(renderer, textures[TEXTURE_FIELD_NUM3], NULL, &Rect_FieldNum3);
+	SDL_RenderCopyEx(renderer, textures[TEXTURE_FIELD_NUM3], NULL, &Rect_FieldNum3, 0, NULL, SDL_FLIP_NONE);
 }
 
 
