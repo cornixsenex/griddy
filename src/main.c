@@ -1,25 +1,26 @@
 #include <stdio.h>
-#include "init_sdl.h"
+#include "camera.h"
 #include "draw_field.h"
 #include "global.h"
+#include "init_sdl.h"
 #include "load_field_textures.h"
 #include "main.h"
 
 int main(void) {
 
+	//This should all be compartmentalized into a main_setup();
 	//SDL Init bootup	
 	initSDL();
-
+	//Setup Camera Object
+	InitCameraObject();
+	//Loads all textures needed in the game and stores them in variables
 	LoadFieldTextures();
 
 	//main loop
 	main_loop();
 
 	//CLEANUP
-	
 	main_cleanup();
-	
-	//Destroy all loaded textures
 	
 	//ALL GOOD
 	printf("EXIT 0\n");
@@ -28,6 +29,7 @@ int main(void) {
 
 void main_cleanup()
 {
+	//Destroy / unload everything stored in memory
 	DestroyFieldTextures();
 	SDL_DestroyRenderer(griddySDL_Data.renderer);
 	SDL_DestroyWindow(griddySDL_Data.fieldWindow);
@@ -52,6 +54,19 @@ void main_loop() {
 					case SDLK_q:
 					case SDLK_ESCAPE:
 						quit = true;
+						break;
+					//Handle Camera Translation
+					case SDLK_a:
+						TryTranslateCameraObjectLeft();
+						break;
+					case SDLK_d:
+						TryTranslateCameraObjectRight();
+						break;
+					case SDLK_w:
+						TryTranslateCameraObjectUp();
+						break;
+					case SDLK_s:
+						TryTranslateCameraObjectDown();
 						break;
 				}
 			case SDL_WINDOWEVENT:

@@ -3,11 +3,10 @@
 #include "global.h"
 #include "draw_field.h"
 
-//Initialize global game data struct thing - This is where the data is stored
+//Initialize global game data struct thing - This is where the window data is stored
 GriddySDL_Data griddySDL_Data;
 
 //Init SDL
-
 int initSDL(void) {
 
 	//Initalize SDL
@@ -40,3 +39,5 @@ int initSDL(void) {
 
 	return false;
 }
+
+

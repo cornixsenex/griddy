@@ -58,11 +58,13 @@ void DrawGriddyGoals(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, FieldDi
 void DrawGriddyHashMarks(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, float scale);
 
 
-void DrawGriddyFieldNumbers(SDL_Renderer *renderer,SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, float scale);
+void DrawGriddyFieldNumbers(SDL_Renderer *renderer,SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale);
 
 void DrawGriddyFieldNumbers10_40(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, SDL_Rect *Rect_FieldNumDest, int xYards);
 
 void DrawGriddyFieldNumbers50(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, SDL_Rect *Rect_FieldNumDest);
+
+void TestDrawTexture(SDL_Renderer *renderer);
 
 
 void CalcFieldLayout(SDL_Rect* Rect_Layout);

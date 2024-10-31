@@ -1,3 +1,4 @@
+#include "camera.h"
 #include "draw_field.h"
 #include "global.h"
 #include "load_field_textures.h"
@@ -54,8 +55,13 @@ void RenderGriddy(SDL_Renderer *renderer)
 }
 
 void HandleResizeScreen() {
+	//Update Window Size
 	griddySDL_Data.screenSizeRect.w = griddySDL_Data.pollEvent.window.data1;
 	griddySDL_Data.screenSizeRect.h = griddySDL_Data.pollEvent.window.data2;
+
+	//Update CameraObject Size
+	griddyCameraObject.w = griddySDL_Data.screenSizeRect.w;
+	griddyCameraObject.h = griddySDL_Data.screenSizeRect.h;
 }
 
 void DrawGriddyField(SDL_Renderer *renderer) 
@@ -98,9 +104,12 @@ void DrawGriddyField(SDL_Renderer *renderer)
 
 	//Draw Hash Marks
 	DrawGriddyHashMarks(renderer, &Rect_FieldOfPlay, &FieldDimension_Griddy_variableScale, scale);
+	
 	//Draw Numbers
-	DrawGriddyFieldNumbers(renderer, &Rect_FieldOfPlay, &FieldDimension_Griddy_variableScale, scale);
+	DrawGriddyFieldNumbers(renderer, &Rect_FieldOfPlay, &FieldDimension_Griddy_variableScale);
 
+	//TEST Draw partial texture (negative X value)
+	TestDrawTexture(renderer);
 	//Draw players ?
 }
 
@@ -114,6 +123,13 @@ void ScaleGriddyFieldOfPlay (SDL_Rect *Rect_Layout, SDL_Rect* Rect_FieldOfPlay)
 	//Calculate the XY of the fieldOfPlay_Rect - Find the total difference between layout and fieldOfPlay then divide that in half to get the top left coordinates
 	Rect_FieldOfPlay->x = Rect_Layout->x + ( (Rect_Layout->w - Rect_FieldOfPlay->w) / 2);
 	Rect_FieldOfPlay->y = Rect_Layout->y + ( (Rect_Layout->h - Rect_FieldOfPlay->h) / 2);
+
+	//Handle Camera Scale - Not coded yet
+	//Rect_FieldOfPlay->x -= 150;
+	//Rect_FieldOfPlay->y -= 150;
+	//Rect_FieldOfPlay->w = Rect_FieldOfPlay->w * 2;
+	//Rect_FieldOfPlay->h = Rect_FieldOfPlay->h * 2;
+
 }
 
 void DrawGriddyFieldOfPlay (SDL_Renderer *renderer, SDL_Rect *Rect_Layout, SDL_Rect* Rect_FieldOfPlay)
@@ -340,6 +356,14 @@ void CalcFieldLayout(SDL_Rect* Rect_Layout)
 	//SET MARGINS - Total Margin is the difference between the screensize and the layout size / one side margin is half that	
 	Rect_Layout->x = (griddySDL_Data.screenSizeRect.w - Rect_Layout->w) / 2;
 	Rect_Layout->y = (griddySDL_Data.screenSizeRect.h - Rect_Layout->h) / 2;
+
+	//Accomodate Camera Translation and Zoom - not coded yeti
+	Rect_Layout->x -= griddyCameraObject.x;
+	Rect_Layout->y -= griddyCameraObject.y;
+	Rect_Layout->w *= griddyCameraObject.scale;
+	Rect_Layout->h *= griddyCameraObject.scale;
+
+	
 }
 
 void SetVariableGriddyDimensionScale (SDL_Rect *Rect_Layout, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, float scale)
@@ -393,7 +417,7 @@ void DrawGriddyHashMarks(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, Fie
 	}
 }
 
-void DrawGriddyFieldNumbers(SDL_Renderer *renderer,SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, float scale)
+void DrawGriddyFieldNumbers(SDL_Renderer *renderer,SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale)
 {
 	//Declare the SDL_Rect onto which we will render the textures
 	SDL_Rect Rect_FieldNumDest;
@@ -501,3 +525,18 @@ void DrawGriddyFieldNumbers50(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay
 	Rect_FieldNumDest->x = Rect_FieldOfPlay->x + (Rect_FieldOfPlay->w / 2) + numMargin * 2;
 	SDL_RenderCopyEx(renderer, textures[TEXTURE_FIELD_NUM0], NULL, Rect_FieldNumDest, 0, NULL, SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
 }
+
+void TestDrawTexture(SDL_Renderer *renderer)
+{
+	//SDL_Rect Rect_TestDest;
+	//
+	//Rect_TestDest.x = -200;
+	//Rect_TestDest.y = 50;
+	//Rect_TestDest.w = 250; 
+	//Rect_TestDest.h = 100;
+
+	//SDL_RenderFillRect(renderer, &Rect_TestDest);
+
+	//SDL_RenderCopyEx(renderer, textures[3], NULL, &Rect_TestDest, 0, NULL, SDL_FLIP_NONE);
+}
+	

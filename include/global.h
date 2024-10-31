@@ -10,3 +10,16 @@ typedef struct {
 } GriddySDL_Data;
 
 extern GriddySDL_Data griddySDL_Data;
+
+typedef struct {
+	float x;
+	float y;
+	float w;
+	float h;
+	float scale;
+	float rotationAngle;
+} CameraObject;
+
+extern CameraObject griddyCameraObject;
+
+
