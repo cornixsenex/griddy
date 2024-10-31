@@ -395,22 +395,83 @@ void DrawGriddyHashMarks(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, Fie
 
 void DrawGriddyFieldNumbers(SDL_Renderer *renderer,SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, float scale)
 {
-	//Test draw 3 in the middle of the field
-	
-	SDL_Rect Rect_FieldNum3;
+	//Declare the SDL_Rect onto which we will render the textures
+	SDL_Rect Rect_FieldNumDest;
 
-	//one foot margin between end of letter and goal line
-	//X should be FieldRect.x + i * FielRect.w / 10 - distance between number and line
-	//X is find the yard line then subtrack 1 then subtract numberWidth
-	Rect_FieldNum3.x = Rect_FieldOfPlay->x + (3 * FieldDimension_Griddy_variableScale->fieldLength / 10) - 3 - FieldDimension_Griddy_variableScale->numberWidth;
-	//Y is just go down to field h and then subtract margin then subtrack num height
-	Rect_FieldNum3.y = Rect_FieldOfPlay->y + FieldDimension_Griddy_variableScale->fieldWidth - FieldDimension_Griddy_variableScale->numberMargin - FieldDimension_Griddy_variableScale->numberHeight;
+	//It's 5 seperate functions
+	//Each prints sets of numbers on the appropriate locations of the proportional gridirion
+	//10 20 30 and 40 are all 4 sets with sets on both sides of the field
+	//50 is just the one set
+	//while loop * 10 proportional yards * i
+	//switch i to print certain number
 
-	Rect_FieldNum3.w = FieldDimension_Griddy_variableScale->numberWidth;
-	Rect_FieldNum3.h = FieldDimension_Griddy_variableScale->numberHeight;
+	//All numbers will have the same dimensions wh no need to re-set only calculate their xy and render
+	//W and H are defined in the FieldDimension
+	Rect_FieldNumDest.w= FieldDimension_Griddy_variableScale->numberWidth;
+	Rect_FieldNumDest.h= FieldDimension_Griddy_variableScale->numberHeight;
 
-	//SDL_RenderCopy(renderer, textures[TEXTURE_FIELD_NUM3], NULL, &Rect_FieldNum3);
-	SDL_RenderCopyEx(renderer, textures[TEXTURE_FIELD_NUM3], NULL, &Rect_FieldNum3, 0, NULL, SDL_FLIP_NONE);
+	//Draw the numbers subfunction
+	DrawGriddyFieldNumbers10_40(renderer, Rect_FieldOfPlay, FieldDimension_Griddy_variableScale, &Rect_FieldNumDest, 1);
+	DrawGriddyFieldNumbers10_40(renderer, Rect_FieldOfPlay, FieldDimension_Griddy_variableScale, &Rect_FieldNumDest, 2);
+	DrawGriddyFieldNumbers10_40(renderer, Rect_FieldOfPlay, FieldDimension_Griddy_variableScale, &Rect_FieldNumDest, 3);
+	DrawGriddyFieldNumbers10_40(renderer, Rect_FieldOfPlay, FieldDimension_Griddy_variableScale, &Rect_FieldNumDest, 4);
+
+	//DrawGriddyFieldNumbers50(renderer, Rect_FieldOfPlay, FieldDimension_Griddy_variableScale, &Rect_FieldNumDest);
+
 }
 
+void DrawGriddyFieldNumbers10_40(SDL_Renderer *renderer, SDL_Rect *Rect_FieldOfPlay, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, SDL_Rect *Rect_FieldNumDest, int xYards)
+{
+	int numMargin = 3;	//3 foot margin between end of letter and goal line / irl it's like 6 inches but doesn't look good BUT adjustable for sure
 
+	//Bottom Row
+	//Y is just go down to field h and then subtract margin then subtrack num height
+	Rect_FieldNumDest->y = Rect_FieldOfPlay->y + FieldDimension_Griddy_variableScale->fieldWidth - FieldDimension_Griddy_variableScale->numberMargin - FieldDimension_Griddy_variableScale->numberHeight;
+	
+	//Draw Bottom left set
+	
+	//First Draw the left, variable number	
+	Rect_FieldNumDest->x = Rect_FieldOfPlay->x + (xYards * FieldDimension_Griddy_variableScale->fieldLength / 10) - numMargin - FieldDimension_Griddy_variableScale->numberWidth;
+
+	//Render the texuture - note this is the variable number, texture is indexed to the textures array defined in load_field_texture
+	SDL_RenderCopyEx(renderer, textures[xYards], NULL, Rect_FieldNumDest, 0, NULL, SDL_FLIP_NONE);
+
+	//Next Draw the right 0
+	//Num now on the right side of the goal line	
+	Rect_FieldNumDest->x = Rect_FieldOfPlay->x + (xYards * FieldDimension_Griddy_variableScale->fieldLength / 10) + numMargin * 2;
+
+	//Render the texture
+	SDL_RenderCopyEx(renderer, textures[TEXTURE_FIELD_NUM0], NULL, Rect_FieldNumDest, 0, NULL, SDL_FLIP_NONE);
+
+	//Draw the bottom right set
+	//First Draw the left, variable number	
+	Rect_FieldNumDest->x = Rect_FieldOfPlay->x + (Rect_FieldOfPlay->w) - (xYards * FieldDimension_Griddy_variableScale->fieldLength / 10) - numMargin - FieldDimension_Griddy_variableScale->numberWidth;
+	SDL_RenderCopyEx(renderer, textures[xYards], NULL, Rect_FieldNumDest, 0, NULL, SDL_FLIP_NONE);
+
+	//Next draw the right 0
+	Rect_FieldNumDest->x = Rect_FieldOfPlay->x + (Rect_FieldOfPlay->w) - (xYards * FieldDimension_Griddy_variableScale->fieldLength / 10) + numMargin * 2;
+	SDL_RenderCopyEx(renderer, textures[TEXTURE_FIELD_NUM0], NULL, Rect_FieldNumDest, 0, NULL, SDL_FLIP_NONE);
+
+	//Top Row
+	//First calculate the y value. Remember 
+	Rect_FieldNumDest->y = Rect_FieldOfPlay->y + FieldDimension_Griddy_variableScale->numberMargin + FieldDimension_Griddy_variableScale->numberHeight;
+	
+	//Top Left Pair
+	//Top Left - Left 0
+	Rect_FieldNumDest->x = Rect_FieldOfPlay->x + (xYards * FieldDimension_Griddy_variableScale->fieldLength / 10) - numMargin - FieldDimension_Griddy_variableScale->numberWidth;
+	SDL_RenderCopyEx(renderer, textures[TEXTURE_FIELD_NUM0], NULL, Rect_FieldNumDest, 0, NULL, SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
+	
+	//Top Left - Right Variable
+	Rect_FieldNumDest->x = Rect_FieldOfPlay->x + (xYards * FieldDimension_Griddy_variableScale->fieldLength / 10) + numMargin * 2;
+	SDL_RenderCopyEx(renderer, textures[xYards], NULL, Rect_FieldNumDest, 0, NULL, SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
+	
+	//Top Right Pair
+	//Top Right - Left 0
+	Rect_FieldNumDest->x = Rect_FieldOfPlay->x + (Rect_FieldOfPlay->w) - (xYards * FieldDimension_Griddy_variableScale->fieldLength / 10) - numMargin - FieldDimension_Griddy_variableScale->numberWidth;
+	SDL_RenderCopyEx(renderer, textures[TEXTURE_FIELD_NUM0], NULL, Rect_FieldNumDest, 0, NULL, SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
+	
+	//Top Right - Right Variable
+	Rect_FieldNumDest->x = Rect_FieldOfPlay->x + (Rect_FieldOfPlay->w) - (xYards * FieldDimension_Griddy_variableScale->fieldLength / 10) + numMargin * 2;
+	SDL_RenderCopyEx(renderer, textures[xYards], NULL, Rect_FieldNumDest, 0, NULL, SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
+
+}
