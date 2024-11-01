@@ -5,3 +5,6 @@ void TryTranslateCameraObjectUp();
 void TryTranslateCameraObjectDown();
 void TryZoomCameraObjectIn();
 void TryZoomCameraObjectOut();
+void UpdateCameraObjectSize();
+void CenterCameraObjectAfterZoomIn();
+void CenterCameraObjectAfterZoomOut();

@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
 #include "camera.h"
+#include "draw_field.h"
 #include "global.h"
+#include <stdio.h>
 
 //Global Camera Object
 CameraObject griddyCameraObject;
@@ -19,25 +21,22 @@ void InitCameraObject()
 
 void TryTranslateCameraObjectLeft() 
 {
-	griddyCameraObject.x -= 10;
+	griddyCameraObject.x -= griddyCameraObject.w / 10;
 }
 
 void TryTranslateCameraObjectRight()
 {
-	griddyCameraObject.x += 10;
-
+	griddyCameraObject.x += griddyCameraObject.w / 10;
 }
 
 void TryTranslateCameraObjectUp()
 {
-	griddyCameraObject.y -= 10;
-
+	griddyCameraObject.y -= griddyCameraObject.w / 10;
 }
 
 void TryTranslateCameraObjectDown()
 {
-	griddyCameraObject.y += 10;
-
+	griddyCameraObject.y += griddyCameraObject.w / 10;
 }
 
 void TryZoomCameraObjectIn()
@@ -58,6 +57,8 @@ void TryZoomCameraObjectIn()
 		default:
 			break;
 	}
+	CenterCameraObjectAfterZoomIn();
+	//Center XY on the new zoom'd in CameraView
 }
 
 void TryZoomCameraObjectOut()
@@ -80,4 +81,51 @@ void TryZoomCameraObjectOut()
 		default:
 			break;
 	}
+	CenterCameraObjectAfterZoomOut();
 }
+
+void CenterCameraObjectAfterZoomIn()
+{
+	printf("========\nCameraObjectData:\n=========\nx:	%f\ny:	%f\nw:	%f\nh:	%f\nscale:  %d\n", griddyCameraObject.x, griddyCameraObject.y, griddyCameraObject.w, griddyCameraObject.h, griddyCameraObject.scale);
+	UpdateCameraObjectSize();
+	if (griddyCameraObject.scale == 1) {
+		griddyCameraObject.x = griddySDL_Data.screenSizeRect.x;
+		griddyCameraObject.y = griddySDL_Data.screenSizeRect.y;
+	} else {
+		griddyCameraObject.x += griddyCameraObject.w / 2;
+		griddyCameraObject.y += griddyCameraObject.h / 2;
+	}
+	printf("========\nCameraObjectData:\n=========\nx:	%f\ny:	%f\nw:	%f\nh:	%f\nscale:  %d\n", griddyCameraObject.x, griddyCameraObject.y, griddyCameraObject.w, griddyCameraObject.h, griddyCameraObject.scale);
+}
+
+void CenterCameraObjectAfterZoomOut()
+{
+	printf("========\nCameraObjectData:\n=========\nx:	%f\ny:	%f\nw:	%f\nh:	%f\nscale:  %d\n", griddyCameraObject.x, griddyCameraObject.y, griddyCameraObject.w, griddyCameraObject.h, griddyCameraObject.scale);
+	UpdateCameraObjectSize();	
+	if (griddyCameraObject.scale == 1) {
+		griddyCameraObject.x = griddySDL_Data.screenSizeRect.x;
+		griddyCameraObject.y = griddySDL_Data.screenSizeRect.y;
+	} else {
+		griddyCameraObject.x -= griddyCameraObject.w / 2;
+		griddyCameraObject.y -= griddyCameraObject.h / 2;
+	}
+	printf("========\nCameraObjectData:\n=========\nx:	%f\ny:	%f\nw:	%f\nh:	%f\nscale:  %d\n", griddyCameraObject.x, griddyCameraObject.y, griddyCameraObject.w, griddyCameraObject.h, griddyCameraObject.scale);
+}
+
+void UpdateCameraObjectSize()
+{
+	SDL_Rect Rect_Layout;
+	//Update CameraObject Size
+	CalcFieldLayout(&Rect_Layout);
+	griddyCameraObject.w = Rect_Layout.w / griddyCameraObject.scale;
+	griddyCameraObject.h = Rect_Layout.h / griddyCameraObject.scale;;
+}
+
+
+
+
+
+
+
+
+
