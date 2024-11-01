@@ -39,3 +39,45 @@ void TryTranslateCameraObjectDown()
 	griddyCameraObject.y += 10;
 
 }
+
+void TryZoomCameraObjectIn()
+{
+	switch (griddyCameraObject.scale) {
+		case 1:
+			griddyCameraObject.scale = 2;
+			break;
+		case 2:
+			griddyCameraObject.scale = 5;
+			break;
+		case 5:
+			griddyCameraObject.scale = 10;
+			break;
+		case 10:
+			griddyCameraObject.scale = 20;
+			break;
+		default:
+			break;
+	}
+}
+
+void TryZoomCameraObjectOut()
+{
+	switch (griddyCameraObject.scale) {
+		case 1:
+			break;
+		case 2:
+			griddyCameraObject.scale = 1;
+			break;
+		case 5:
+			griddyCameraObject.scale = 2;
+			break;
+		case 10:
+			griddyCameraObject.scale = 5;
+			break;
+		case 20:
+			griddyCameraObject.scale = 10;
+			break;
+		default:
+			break;
+	}
+}

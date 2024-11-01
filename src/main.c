@@ -68,6 +68,12 @@ void main_loop() {
 					case SDLK_s:
 						TryTranslateCameraObjectDown();
 						break;
+					case SDLK_j:
+						TryZoomCameraObjectIn();
+						break;
+					case SDLK_k:
+						TryZoomCameraObjectOut();
+						break;
 				}
 			case SDL_WINDOWEVENT:
 				switch (griddySDL_Data.pollEvent.window.event) {

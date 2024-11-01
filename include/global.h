@@ -16,7 +16,7 @@ typedef struct {
 	float y;
 	float w;
 	float h;
-	float scale;
+	int scale;
 	float rotationAngle;
 } CameraObject;
 

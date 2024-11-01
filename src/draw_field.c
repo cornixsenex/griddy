@@ -362,7 +362,6 @@ void CalcFieldLayout(SDL_Rect* Rect_Layout)
 	Rect_Layout->y -= griddyCameraObject.y;
 	Rect_Layout->w *= griddyCameraObject.scale;
 	Rect_Layout->h *= griddyCameraObject.scale;
-
 	
 }
 
