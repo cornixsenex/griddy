@@ -356,10 +356,10 @@ void CalcFieldLayout(SDL_Rect* Rect_Layout)
 	Rect_Layout->y = (griddySDL_Data.screenSizeRect.h - Rect_Layout->h) / 2;
 
 	//Accomodate Camera Translation and Zoom 
-	Rect_Layout->x -= griddyCameraObject.x;
-	Rect_Layout->y -= griddyCameraObject.y;
-	Rect_Layout->w *= griddyCameraObject.scale;
-	Rect_Layout->h *= griddyCameraObject.scale;
+	//Rect_Layout->x -= griddyCameraObject.x;
+	//Rect_Layout->y -= griddyCameraObject.y;
+	//Rect_Layout->w *= griddyCameraObject.scale;
+	//Rect_Layout->h *= griddyCameraObject.scale;
 }
 
 void SetVariableGriddyDimensionScale (SDL_Rect *Rect_Layout, FieldDimension_Griddy *FieldDimension_Griddy_variableScale, float scale)

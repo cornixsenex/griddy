@@ -86,44 +86,51 @@ void TryZoomCameraObjectOut()
 
 void CenterCameraObjectAfterZoomIn()
 {
-	printf("========\nCameraObjectData:\n=========\nx:	%f\ny:	%f\nw:	%f\nh:	%f\nscale:  %d\n", griddyCameraObject.x, griddyCameraObject.y, griddyCameraObject.w, griddyCameraObject.h, griddyCameraObject.scale);
+	printf("TOP\n");
 	UpdateCameraObjectSize();
+	SDL_Rect Rect_Layout;
+	TestPrintCameraInfo();
 	if (griddyCameraObject.scale == 1) {
-		griddyCameraObject.x = griddySDL_Data.screenSizeRect.x;
-		griddyCameraObject.y = griddySDL_Data.screenSizeRect.y;
+		griddyCameraObject.x = 0;
+		griddyCameraObject.y = 0;
 	} else {
-		griddyCameraObject.x += griddyCameraObject.w / 2;
-		griddyCameraObject.y += griddyCameraObject.h / 2;
+		CalcFieldLayout(&Rect_Layout);
+		//Undo the translation and zoom shit // Just give me the actual base layout relative to the window size 
+		Rect_Layout.x += griddyCameraObject.x;
+		Rect_Layout.y += griddyCameraObject.y;
+		Rect_Layout.w /= griddyCameraObject.scale;
+		Rect_Layout.h /= griddyCameraObject.scale;
+
+		//Now....The camera X is literally the layout width minus the camera width divided by two because the margin is the difference between the camera width and the layout width
+		griddyCameraObject.x = (Rect_Layout.w - griddyCameraObject.w) / 2;
+		griddyCameraObject.y = (Rect_Layout.h - griddyCameraObject.h) / 2;
 	}
-	printf("========\nCameraObjectData:\n=========\nx:	%f\ny:	%f\nw:	%f\nh:	%f\nscale:  %d\n", griddyCameraObject.x, griddyCameraObject.y, griddyCameraObject.w, griddyCameraObject.h, griddyCameraObject.scale);
+	printf("AFTER\n");
+	TestPrintCameraInfo();
 }
 
 void CenterCameraObjectAfterZoomOut()
 {
-	printf("========\nCameraObjectData:\n=========\nx:	%f\ny:	%f\nw:	%f\nh:	%f\nscale:  %d\n", griddyCameraObject.x, griddyCameraObject.y, griddyCameraObject.w, griddyCameraObject.h, griddyCameraObject.scale);
-	UpdateCameraObjectSize();	
-	if (griddyCameraObject.scale == 1) {
-		griddyCameraObject.x = griddySDL_Data.screenSizeRect.x;
-		griddyCameraObject.y = griddySDL_Data.screenSizeRect.y;
-	} else {
-		griddyCameraObject.x -= griddyCameraObject.w / 2;
-		griddyCameraObject.y -= griddyCameraObject.h / 2;
-	}
-	printf("========\nCameraObjectData:\n=========\nx:	%f\ny:	%f\nw:	%f\nh:	%f\nscale:  %d\n", griddyCameraObject.x, griddyCameraObject.y, griddyCameraObject.w, griddyCameraObject.h, griddyCameraObject.scale);
+	UpdateCameraObjectSize();
+	SDL_Rect Rect_Layout;
+	TestPrintCameraInfo();
+	CalcFieldLayout(&Rect_Layout);
 }
 
 void UpdateCameraObjectSize()
 {
 	SDL_Rect Rect_Layout;
-	//Update CameraObject Size
+	
 	CalcFieldLayout(&Rect_Layout);
-	griddyCameraObject.w = Rect_Layout.w / griddyCameraObject.scale;
-	griddyCameraObject.h = Rect_Layout.h / griddyCameraObject.scale;;
+
+	griddyCameraObject.w = (float)Rect_Layout.w / griddyCameraObject.scale / griddyCameraObject.scale;
+	griddyCameraObject.h = (float)Rect_Layout.h / griddyCameraObject.scale / griddyCameraObject.scale;
 }
 
-
-
-
+void TestPrintCameraInfo()
+{
+	printf("========\nCameraObjectData:\n=========\nx:	%f\ny:	%f\nw:	%f\nh:	%f\nscale:  %d\n", griddyCameraObject.x, griddyCameraObject.y, griddyCameraObject.w, griddyCameraObject.h, griddyCameraObject.scale);
+}
 
 
 

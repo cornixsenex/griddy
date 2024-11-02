@@ -8,3 +8,5 @@ void TryZoomCameraObjectOut();
 void UpdateCameraObjectSize();
 void CenterCameraObjectAfterZoomIn();
 void CenterCameraObjectAfterZoomOut();
+
+void TestPrintCameraInfo();
